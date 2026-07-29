@@ -1,0 +1,192 @@
+---
+title: "Introduction to chaidr"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to chaidr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7.2,
+  fig.height = 5,
+  out.width = "100%"
+)
+has_partykit <- requireNamespace("partykit", quietly = TRUE)
+```
+
+chaidr implements the CHAID (Chi-squared Automatic Interaction Detection)
+and Exhaustive CHAID decision tree algorithms in base R, following the
+IBM SPSS Statistics Algorithms specification. Unlike binary trees such as
+CART, CHAID produces **multi-way splits** driven by hypothesis tests:
+categories of each predictor are merged while they are statistically
+similar, and the node is split by the predictor with the smallest
+Bonferroni-adjusted p value.
+
+This vignette is a compact tour of the package. A much more detailed
+tutorial (algorithm internals, Exhaustive CHAID trade-offs, weights,
+misclassification costs, ordinal responses, and every visualization
+backend) is available in Japanese in the companion vignette
+`vignette("chaidr-ja")`.
+
+## Quick start
+
+The `penguins` data set (bundled with R >= 4.5) mixes continuous
+predictors with missing values, both of which CHAID handles natively.
+
+```{r quickstart}
+library(chaidr)
+
+data(penguins)
+fit <- chaid(species ~ ., data = penguins,
+             control = chaid_control(min_parent = 30, min_child = 10))
+print(fit)
+```
+
+Continuous predictors such as `flipper_len` are discretized into up to 10
+quantile bins before growing; statistically similar bins are then merged
+back, producing multi-way splits. Groups containing `<NA>` show where
+missing values were merged as a *floating* category. Terminal nodes are
+marked with `*`.
+
+```{r plot, fig.height=6}
+plot(fit, main = "CHAID: penguins (species)")
+```
+
+Prediction uses the standard S3 interface:
+
+```{r predict}
+pred <- predict(fit, penguins)          # class labels (factor)
+mean(pred == penguins$species)          # training accuracy
+
+round(predict(fit, head(penguins, 3), type = "prob"), 3)  # probabilities
+predict(fit, head(penguins, 3), type = "node")            # terminal node ids
+```
+
+## The algorithm in brief
+
+At each node CHAID repeats three phases:
+
+1. **Merge** -- for every predictor, iteratively merge the pair of
+   (allowable) categories with the least significant difference in the
+   response, until all remaining pairs are significant
+   (`alpha_merge`). Ordinal predictors may merge adjacent categories
+   only; nominal predictors may merge any pair.
+2. **Split** -- compute a Bonferroni-adjusted p value for each merged
+   predictor and split by the best one if adjusted p <= `alpha_split`.
+3. **Stop** -- otherwise (or when depth/size limits are reached) the node
+   becomes terminal.
+
+The significance test is selected by the response type:
+
+| Response          | Test                                  |
+|-------------------|---------------------------------------|
+| `factor` (nominal)| Pearson chi-squared (or likelihood ratio G²) |
+| `ordered`         | Goodman row-effects model (likelihood ratio H²) |
+| `numeric`         | One-way ANOVA F                       |
+
+The main knobs of `chaid_control()` (defaults match the SPSS UI):
+
+| Parameter     | Default | Meaning                                        |
+|---------------|---------|------------------------------------------------|
+| `alpha_merge` | 0.05    | keep merging while pairwise p exceeds this     |
+| `alpha_split` | 0.05    | split when adjusted p is at or below this      |
+| `max_depth`   | 3       | maximum tree depth                             |
+| `min_parent`  | 100     | minimum cases to attempt a split               |
+| `min_child`   | 50      | minimum cases per child node                   |
+| `n_bins`      | 10      | target quantile bins for continuous predictors |
+
+## Exhaustive CHAID
+
+`method = "exhaustive"` keeps merging each predictor all the way down to
+two categories and then picks the most significant configuration from the
+whole merge history, avoiding the local optima of the standard greedy
+merge. With the Titanic data it discovers additional structure below a
+coarser first split:
+
+```{r titanic}
+tit <- as.data.frame(Titanic)
+fit_std <- chaid(Survived ~ Class + Sex + Age, data = tit, freq = tit$Freq)
+fit_ex  <- chaid(Survived ~ Class + Sex + Age, data = tit, freq = tit$Freq,
+                 method = "exhaustive")
+print(fit_ex)
+```
+
+Note the `freq` argument: frequency weights make the fit on aggregated
+data identical to the fit on the expanded case-level data.
+
+The two methods redistribute the Bonferroni penalty differently, which
+matters when nominal predictors with many levels are present -- see the
+Japanese vignette for benchmarks, a simulation of the false-positive
+bias, and practical guidance on choosing between them.
+
+## Reporting
+
+Terminal-node summaries, decision rules (as text, SQL, or R
+expressions), and a p-value-based predictor importance:
+
+```{r reporting}
+tb <- chaid_table(fit, target = "Gentoo")
+tb[, setdiff(names(tb), "rule")]
+
+head(chaid_rules(fit, format = "sql"), 3)
+
+chaid_importance(fit)
+```
+
+Gains and lift analysis (which nodes capture the target class most
+efficiently), and validation of a fitted tree on holdout data:
+
+```{r gains, fig.height=4.5}
+g <- chaid_gains(fit_std, target = "Yes")
+print(g)
+plot(g)
+```
+
+```{r validate}
+set.seed(9)
+idx <- sample(nrow(penguins), 244)
+fit_tr <- chaid(species ~ ., data = penguins[idx, ],
+                control = chaid_control(min_parent = 30, min_child = 10))
+chaid_validate(fit_tr, penguins[-idx, ])
+```
+
+## Visualization
+
+The built-in `plot()` method (shown above) needs no extra packages.
+Three optional backends are available:
+
+```{r viz, eval = FALSE}
+chaid_graphviz(fit)              # 'Graphviz' via DiagrammeR (publication quality)
+chaid_dot(fit, file = "tree.gv") # raw DOT export for the dot CLI
+chaid_plotly(fit)                # interactive htmlwidget with hover details
+```
+
+A fitted tree can also be converted to a `partykit::party` object, which
+opens up the partykit and ggparty plotting ecosystems:
+
+```{r partykit, eval = has_partykit, fig.height=6}
+pt <- chaid_as_party(fit, penguins)   # pass the data used for fitting
+plot(pt)
+```
+
+## Further reading
+
+* `vignette("chaidr-ja")` -- detailed tutorial (in Japanese): algorithm
+  internals, standard vs. Exhaustive CHAID, weights, missing-value
+  handling, multiplicity adjustment across predictors, comparison with
+  CART, misclassification costs, ordinal responses, and all
+  visualization backends.
+
+## References
+
+* Kass, G. V. (1980). An exploratory technique for investigating large
+  quantities of categorical data. *Applied Statistics*, 29(2), 119--127.
+* Biggs, D., de Ville, B., & Suen, E. (1991). A method of choosing
+  multiway partitions for classification and decision trees. *Journal of
+  Applied Statistics*, 18(1), 49--62.
+* IBM Corp. *IBM SPSS Statistics Algorithms* -- "CHAID and Exhaustive
+  CHAID Algorithms".

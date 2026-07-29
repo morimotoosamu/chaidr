@@ -1,0 +1,29 @@
+template:
+  bootstrap: 5
+
+reference:
+- title: Model fitting
+  contents:
+  - chaid
+  - chaid_control
+- title: Prediction
+  contents:
+  - predict.chaid
+- title: Inspection
+  contents:
+  - print.chaid
+  - chaid_table
+  - chaid_rules
+  - chaid_importance
+- title: Evaluation
+  contents:
+  - chaid_gains
+  - chaid_validate
+- title: Visualization
+  contents:
+  - plot.chaid
+  - chaid_dot
+  - chaid_plotly
+- title: partykit integration
+  contents:
+  - chaid_as_party

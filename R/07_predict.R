@@ -1,0 +1,136 @@
+# 07_predict.R -- 学習済み CHAID 木による予測
+
+# newdata の各予測変数を学習時のコード体系へ変換する。
+# 未知の因子水準は NA_integer_（後段でフォールバック）。
+recode_newdata <- function(object, newdata) {
+  lapply(object$predictors, function(p) {
+    if (!p$name %in% names(newdata)) {
+      stop("predict.chaid: variable '", p$name, "' not found in newdata")
+    }
+    x <- newdata[[p$name]]
+    if (!is.null(p$breaks)) {
+      if (!is.numeric(x)) stop("predict.chaid: '", p$name, "' must be numeric")
+      code <- bin_apply(x, p$breaks)
+    } else {
+      code <- match(as.character(x), setdiff(p$levels, "<NA>"))
+    }
+    # 学習時に NA カテゴリがあれば NA をそのコードへ
+    if ("<NA>" %in% p$levels) {
+      na_code <- match("<NA>", p$levels)
+      code[is.na(x)] <- na_code
+    }
+    code
+  })
+}
+
+# 分割時のグループに含まれないコード（= そのノードには実在しなかった
+# 元カテゴリ、および学習時に未知だった水準・NA）を子ノードへ振り分ける。
+# 順序型: コード距離が最小のグループへ（外挿的だが自然）。
+# 名義型・NA・その他フォールバック: 最大ノードサイズ（N_f）の子へ。
+route_children <- function(node, codes_var, ordinal, nodes) {
+  groups <- node$split$groups
+  children <- node$split$children
+  gmap <- rep(NA_integer_, max(unlist(groups), codes_var, na.rm = TRUE))
+  for (gi in seq_along(groups)) gmap[groups[[gi]]] <- gi
+  gi <- ifelse(is.na(codes_var), NA_integer_, gmap[codes_var])
+  unmapped <- which(is.na(gi))
+  if (length(unmapped)) {
+    nf_child <- vapply(children, function(cid) nodes[[cid]]$Nf, numeric(1))
+    fallback <- which.max(nf_child)
+    for (r in unmapped) {
+      code <- codes_var[r]
+      if (ordinal && !is.na(code)) {
+        d <- vapply(groups, function(g) min(abs(g - code)), numeric(1))
+        gi[r] <- which.min(d)
+      } else {
+        gi[r] <- fallback
+      }
+    }
+  }
+  children[gi]
+}
+
+#' Predict from a fitted CHAID tree
+#'
+#' Routes the rows of `newdata` down the tree and returns predictions.
+#' Factor levels unseen during training, and codes that did not occur in
+#' a node when it was split, are routed to the child with the largest
+#' node size (for ordinal predictors, to the group with the smallest
+#' code distance); a warning is issued when unseen levels are detected.
+#'
+#' @param object A fitted `"chaid"` object returned by [chaid()].
+#' @param newdata A data frame containing all predictor variables used
+#'   in the fit.
+#' @param type `"response"` (default) returns predicted classes (or
+#'   means for a continuous response), `"prob"` returns a matrix of
+#'   class probabilities (categorical responses only), `"node"` returns
+#'   the terminal node id for each row.
+#' @param ... Ignored.
+#'
+#' @return Depending on `type`: a factor (or numeric vector) of
+#'   predictions, a numeric matrix of class probabilities with one
+#'   column per response level, or an integer vector of node ids.
+#'
+#' @seealso [chaid()]
+#' @examples
+#' fit <- chaid(Species ~ ., data = iris,
+#'              control = chaid_control(min_parent = 30, min_child = 10))
+#' predict(fit, head(iris))
+#' predict(fit, head(iris), type = "prob")
+#' predict(fit, head(iris), type = "node")
+#' @export
+predict.chaid <- function(object, newdata,
+                          type = c("response", "prob", "node"), ...) {
+  type <- match.arg(type)
+  codes <- recode_newdata(object, newdata)
+  n <- nrow(newdata)
+  nodes <- object$nodes
+
+  unknown_seen <- FALSE
+  for (p in object$predictors) {
+    if (is.null(p$breaks)) {
+      x <- newdata[[p$name]]
+      lv <- setdiff(p$levels, "<NA>")
+      if (any(!is.na(x) & !(as.character(x) %in% lv))) unknown_seen <- TRUE
+    }
+  }
+  if (unknown_seen) {
+    warning("predict.chaid: levels not seen during fitting detected; ",
+            "assigning those cases to the child with the largest node size")
+  }
+
+  cur <- rep(1L, n)
+  repeat {
+    moved <- FALSE
+    for (nd in nodes) {
+      if (is.null(nd$split)) next
+      rows <- which(cur == nd$id)
+      if (!length(rows)) next
+      p <- object$predictors[[nd$split$var_index]]
+      cur[rows] <- route_children(nd, codes[[nd$split$var_index]][rows],
+                                  ordinal = (p$ptype == "ordinal"), nodes)
+      moved <- TRUE
+    }
+    if (!moved) break
+  }
+
+  if (type == "node") return(cur)
+  if (type == "response") {
+    if (object$response$type != "numeric") {
+      preds <- vapply(cur, function(id) nodes[[id]]$prediction, character(1))
+      return(factor(preds, levels = object$response$levels,
+                    ordered = (object$response$type == "ordinal")))
+    }
+    return(vapply(cur, function(id) nodes[[id]]$prediction, numeric(1)))
+  }
+  # type == "prob"（カテゴリカル・順序目的変数のみ）
+  if (object$response$type == "numeric") {
+    stop("predict.chaid: type='prob' is only for categorical responses")
+  }
+  probs <- t(vapply(cur, function(id) {
+    d <- nodes[[id]]$dist
+    d / sum(d)
+  }, numeric(length(object$response$levels))))
+  colnames(probs) <- object$response$levels
+  probs
+}

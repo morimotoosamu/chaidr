@@ -1,0 +1,16 @@
+^chaidr\.Rproj$
+^\.Rproj\.user$
+^\.Rhistory$
+^LICENSE\.md$
+^ARCHITECTURE\.md$
+^TUTORIAL\.
+^demo\.R$
+^data-raw$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.claude$
+^README\.Rmd$
+^README\.ja\.md$
+^DESCRIPTION\.bak$
+^cran-comments\.md$

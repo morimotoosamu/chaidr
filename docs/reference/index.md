@@ -1,0 +1,51 @@
+# Package index
+
+## Model fitting
+
+- [`chaid()`](chaid.md) : Fit a CHAID or Exhaustive CHAID decision tree
+- [`chaid_control()`](chaid_control.md) : Control parameters for CHAID
+  tree growing
+
+## Prediction
+
+- [`predict(`*`<chaid>`*`)`](predict.chaid.md) : Predict from a fitted
+  CHAID tree
+
+## Inspection
+
+- [`print(`*`<chaid>`*`)`](print.chaid.md)
+  [`summary(`*`<chaid>`*`)`](print.chaid.md) : Print and summarise a
+  CHAID tree
+- [`chaid_table()`](chaid_table.md) : Summary table of CHAID terminal
+  nodes
+- [`chaid_rules()`](chaid_rules.md) : Extract decision rules from a
+  CHAID tree
+- [`chaid_importance()`](chaid_importance.md) : Heuristic variable
+  importance for a CHAID tree
+
+## Evaluation
+
+- [`chaid_gains()`](chaid_gains.md)
+  [`print(`*`<chaid_gains>`*`)`](chaid_gains.md)
+  [`plot(`*`<chaid_gains>`*`)`](chaid_gains.md) : Gains and lift table
+  for a CHAID tree
+- [`chaid_validate()`](chaid_validate.md)
+  [`print(`*`<chaid_validation>`*`)`](chaid_validate.md) : Evaluate a
+  CHAID tree on holdout data
+
+## Visualization
+
+- [`plot(`*`<chaid>`*`)`](plot.chaid.md) : Plot a CHAID tree with base
+  graphics
+- [`chaid_dot()`](chaid_dot.md)
+  [`print(`*`<chaid_dot>`*`)`](chaid_dot.md)
+  [`chaid_graphviz()`](chaid_dot.md) : Render a CHAID tree as Graphviz
+  DOT
+- [`chaid_plotly()`](chaid_plotly.md) : Interactive CHAID tree plot with
+  plotly
+
+## partykit integration
+
+- [`chaid_as_party()`](chaid_as_party.md)
+  [`as.party(`*`<chaid>`*`)`](chaid_as_party.md) : Convert a CHAID tree
+  to a partykit constparty
