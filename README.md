@@ -40,6 +40,25 @@ integration are optional soft dependencies.
   (`chaid_plotly()`), and conversion to ‘partykit’ objects
   (`chaid_as_party()`).
 
+## When to use CHAID
+
+If predictive accuracy is the only goal, modern gradient-boosting
+methods such as ‘XGBoost’ and ‘LightGBM’ will usually outperform CHAID.
+CHAID’s strengths lie elsewhere: **interpretability of the results,
+direct connection to decision making, and statistical justification for
+every split**. Rather than a black box, CHAID builds a single multi-way
+tree in which each split is backed by a significance test, which is why
+it remains a strong choice in consulting and marketing practice.
+
+Typical applications:
+
+- Survey analysis, customer-satisfaction (CS) studies, and market
+  research
+- Marketing segmentation and target selection
+- Domains with strong accountability requirements, where every decision
+  rule must be explainable
+- Early-stage exploratory data analysis (EDA)
+
 ## Installation
 
 Once on CRAN, install the released version with:
@@ -173,6 +192,11 @@ chaid_rules(fit)
   Applied Statistics*, 18(1), 49–62.
 - IBM Corp. *IBM SPSS Statistics Algorithms* – “CHAID and Exhaustive
   CHAID Algorithms”.
+
+## Acknowledgments
+
+Development of this package was assisted by Google Gemini and Claude
+Code (Anthropic).
 
 ## License
 
