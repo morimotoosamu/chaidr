@@ -75,6 +75,18 @@
 </ul>
 </div>
 <div class="section level2">
+<h2 id="when-to-use-chaid">When to use CHAID<a class="anchor" aria-label="anchor" href="#when-to-use-chaid"></a>
+</h2>
+<p>If predictive accuracy is the only goal, modern gradient-boosting methods such as ‘XGBoost’ and ‘LightGBM’ will usually outperform CHAID. CHAID’s strengths lie elsewhere: <strong>interpretability of the results, direct connection to decision making, and statistical justification for every split</strong>. Rather than a black box, CHAID builds a single multi-way tree in which each split is backed by a significance test, which is why it remains a strong choice in consulting and marketing practice.</p>
+<p>Typical applications:</p>
+<ul>
+<li>Survey analysis, customer-satisfaction (CS) studies, and market research</li>
+<li>Marketing segmentation and target selection</li>
+<li>Domains with strong accountability requirements, where every decision rule must be explainable</li>
+<li>Early-stage exploratory data analysis (EDA)</li>
+</ul>
+</div>
+<div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>Once on CRAN, install the released version with:</p>
@@ -223,6 +235,11 @@
 <li>Biggs, D., de Ville, B., &amp; Suen, E. (1991). A method of choosing multiway partitions for classification and decision trees. <em>Journal of Applied Statistics</em>, 18(1), 49–62.</li>
 <li>IBM Corp. <em>IBM SPSS Statistics Algorithms</em> – “CHAID and Exhaustive CHAID Algorithms”.</li>
 </ul>
+</div>
+<div class="section level2">
+<h2 id="acknowledgments">Acknowledgments<a class="anchor" aria-label="anchor" href="#acknowledgments"></a>
+</h2>
+<p>Development of this package was assisted by Google Gemini and Claude Code (Anthropic).</p>
 </div>
 <div class="section level2">
 <h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>

@@ -35,6 +35,23 @@ English version:
   オブジェクトへの変換
   （[`chaid_as_party()`](https://morimotoosamu.github.io/chaidr/reference/chaid_as_party.md)）。
 
+## CHAID の使い道
+
+予測精度だけが目的なら、‘XGBoost’ や ‘LightGBM’ といった現代の勾配
+ブースティング系の手法のほうが一般に高性能です。CHAID の強みは別の
+ところにあります — **分析結果の解釈性、意思決定への直結、そしてすべての
+分岐に統計的根拠があること**です。CHAID はブラックボックスではなく、
+各分岐が有意性検定に裏付けられた単一の多分岐木を構築します。コンサル
+ティングやマーケティングの現場で、CHAID が今なお非常に強力な選択肢で
+あり続けている理由がここにあります。
+
+典型的な用途:
+
+- アンケート分析・顧客満足度（CS）調査・市場調査
+- マーケティングのセグメンテーション（ターゲット選定）
+- 説明責任（Accountability）が強く求められる領域
+- 探索的データ分析（EDA）の初期段階
+
 ## インストール
 
 CRAN 公開後はリリース版をインストールできます。
@@ -175,6 +192,11 @@ chaid_rules(fit)
   Applied Statistics*, 18(1), 49–62.
 - IBM Corp. *IBM SPSS Statistics Algorithms* – “CHAID and Exhaustive
   CHAID Algorithms”.
+
+## 謝辞
+
+本パッケージの開発にあたっては Google Gemini と Claude Code（Anthropic）
+の支援を受けました。
 
 ## ライセンス
 

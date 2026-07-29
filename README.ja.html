@@ -57,6 +57,15 @@
 <li>可視化: base graphics の <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>、‘Graphviz’ DOT 出力 （<code><a href="reference/chaid_dot.html">chaid_dot()</a></code>、<code><a href="reference/chaid_dot.html">chaid_graphviz()</a></code>）、‘plotly’ による対話的な木 （<code><a href="reference/chaid_plotly.html">chaid_plotly()</a></code>）、‘partykit’ オブジェクトへの変換 （<code><a href="reference/chaid_as_party.html">chaid_as_party()</a></code>）。</li>
 </ul></div>
 <div class="section level2">
+<h2 id="chaid-の使い道">CHAID の使い道<a class="anchor" aria-label="anchor" href="#chaid-%E3%81%AE%E4%BD%BF%E3%81%84%E9%81%93"></a></h2>
+<p>予測精度だけが目的なら、‘XGBoost’ や ‘LightGBM’ といった現代の勾配 ブースティング系の手法のほうが一般に高性能です。CHAID の強みは別の ところにあります — <strong>分析結果の解釈性、意思決定への直結、そしてすべての 分岐に統計的根拠があること</strong>です。CHAID はブラックボックスではなく、 各分岐が有意性検定に裏付けられた単一の多分岐木を構築します。コンサル ティングやマーケティングの現場で、CHAID が今なお非常に強力な選択肢で あり続けている理由がここにあります。</p>
+<p>典型的な用途:</p>
+<ul><li>アンケート分析・顧客満足度（CS）調査・市場調査</li>
+<li>マーケティングのセグメンテーション（ターゲット選定）</li>
+<li>説明責任（Accountability）が強く求められる領域</li>
+<li>探索的データ分析（EDA）の初期段階</li>
+</ul></div>
+<div class="section level2">
 <h2 id="インストール">インストール<a class="anchor" aria-label="anchor" href="#%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB"></a></h2>
 <p>CRAN 公開後はリリース版をインストールできます。</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -175,6 +184,10 @@
 <li>Biggs, D., de Ville, B., &amp; Suen, E. (1991). A method of choosing multiway partitions for classification and decision trees. <em>Journal of Applied Statistics</em>, 18(1), 49–62.</li>
 <li>IBM Corp. <em>IBM SPSS Statistics Algorithms</em> – “CHAID and Exhaustive CHAID Algorithms”.</li>
 </ul></div>
+<div class="section level2">
+<h2 id="謝辞">謝辞<a class="anchor" aria-label="anchor" href="#%E8%AC%9D%E8%BE%9E"></a></h2>
+<p>本パッケージの開発にあたっては Google Gemini と Claude Code（Anthropic） の支援を受けました。</p>
+</div>
 <div class="section level2">
 <h2 id="ライセンス">ライセンス<a class="anchor" aria-label="anchor" href="#%E3%83%A9%E3%82%A4%E3%82%BB%E3%83%B3%E3%82%B9"></a></h2>
 <p>MIT (c) Osamu Morimoto</p>
