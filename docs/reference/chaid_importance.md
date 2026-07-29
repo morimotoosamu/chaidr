@@ -18,7 +18,8 @@ chaid_importance(fit)
 
 - fit:
 
-  A fitted `"chaid"` object returned by [`chaid()`](chaid.md).
+  A fitted `"chaid"` object returned by
+  [`chaid()`](https://morimotoosamu.github.io/chaidr/reference/chaid.md).
 
 ## Value
 
@@ -29,7 +30,8 @@ percent).
 
 ## See also
 
-[`chaid()`](chaid.md), [`chaid_table()`](chaid_table.md)
+[`chaid()`](https://morimotoosamu.github.io/chaidr/reference/chaid.md),
+[`chaid_table()`](https://morimotoosamu.github.io/chaidr/reference/chaid_table.md)
 
 ## Examples
 

@@ -14,7 +14,9 @@ specified in the IBM SPSS Statistics Algorithms documentation (Kass
 routines depend only on base R – visualization backends and ‘partykit’
 integration are optional soft dependencies.
 
-日本語版 README（README.ja.md）はソースリポジトリに同梱されています。
+日本語版 README は
+[README.ja.md](https://github.com/morimotoosamu/chaidr/blob/HEAD/README.ja.md)
+を参照してください。
 
 ## Features
 
@@ -46,13 +48,12 @@ Once on CRAN, install the released version with:
 install.packages("chaidr")
 ```
 
-Until then, you can install the development version from a local
-checkout:
+Until then, you can install the development version from
+[GitHub](https://github.com/morimotoosamu/chaidr):
 
 ``` r
-# from the package root directory
-# install.packages("devtools")
-devtools::install()
+# install.packages("remotes")
+remotes::install_github("morimotoosamu/chaidr")
 ```
 
 ## Quick start

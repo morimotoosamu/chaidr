@@ -13,7 +13,8 @@ chaid_rules(fit, nodes = NULL, format = c("text", "sql", "r"))
 
 - fit:
 
-  A fitted `"chaid"` object returned by [`chaid()`](chaid.md).
+  A fitted `"chaid"` object returned by
+  [`chaid()`](https://morimotoosamu.github.io/chaidr/reference/chaid.md).
 
 - nodes:
 
@@ -31,7 +32,8 @@ A data frame with columns `node` (integer id) and `rule` (character).
 
 ## See also
 
-[`chaid()`](chaid.md), [`chaid_table()`](chaid_table.md)
+[`chaid()`](https://morimotoosamu.github.io/chaidr/reference/chaid.md),
+[`chaid_table()`](https://morimotoosamu.github.io/chaidr/reference/chaid_table.md)
 
 ## Examples
 
@@ -40,11 +42,11 @@ fit <- chaid(Species ~ ., data = iris,
              control = chaid_control(min_parent = 30, min_child = 10))
 chaid_rules(fit)
 #>   node                       rule
-#> 1    2         Petal.Length ≤ 1.6
-#> 2    3 Petal.Length が (1.6, 3.8]
-#> 3    4 Petal.Length が (3.8, 4.6]
-#> 4    5 Petal.Length が (4.6, 4.9]
-#> 5    6 Petal.Length が (4.9, 5.3]
+#> 1    2        Petal.Length <= 1.6
+#> 2    3 Petal.Length in (1.6, 3.8]
+#> 3    4 Petal.Length in (3.8, 4.6]
+#> 4    5 Petal.Length in (4.6, 4.9]
+#> 5    6 Petal.Length in (4.9, 5.3]
 #> 6    7         Petal.Length > 5.3
 chaid_rules(fit, format = "sql")
 #>   node

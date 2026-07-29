@@ -23,9 +23,16 @@ overfitting."></head><body>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/chaidr.html">Get started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/chaidr-ja.html">chaidr detailed tutorial (Japanese)</a></li>
+  </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/morimotoosamu/chaidr/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -35,7 +42,7 @@ overfitting."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Evaluate a CHAID tree on holdout data</h1>
-
+      <small class="dont-index">Source: <a href="https://github.com/morimotoosamu/chaidr/blob/HEAD/R/13_validate.R" class="external-link"><code>R/13_validate.R</code></a></small>
       <div class="d-none name"><code>chaid_validate.Rd</code></div>
     </div>
 
@@ -101,9 +108,10 @@ available.</p>
 <span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="chaid.html">chaid</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">[</span><span class="va">idx</span>, <span class="op">]</span>,</span></span>
 <span class="r-in"><span>             control <span class="op">=</span> <span class="fu"><a href="chaid_control.html">chaid_control</a></span><span class="op">(</span>min_parent <span class="op">=</span> <span class="fl">30</span>, min_child <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">chaid_validate</span><span class="op">(</span><span class="va">fit</span>, <span class="va">iris</span><span class="op">[</span><span class="op">-</span><span class="va">idx</span>, <span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CHAID 安定性評価（検証データ n = 50 ）</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 検証データ精度: 0.9 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> （rate = 予測クラスの構成比 / 連続目的変数では平均。 diff_rate の絶対値が大きいノードは検証データで再現していない）</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CHAID stability assessment (validation n = 50 )</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Validation accuracy: 0.9 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> (rate = share of the predicted class, or the mean for continuous responses.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Nodes with a large |diff_rate| do not replicate on the validation data.)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  node prediction train_pct_n test_pct_n train_rate test_rate diff_rate</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     2     setosa          28         32     1.0000    1.0000    0.0000</span>

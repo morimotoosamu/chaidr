@@ -12,7 +12,8 @@ Algorithms ドキュメントの仕様（Kass 1980; Biggs, de Ville, and Suen 19
 準拠しています。学習・予測のコアは base R のみで動作し、可視化バックエンドと
 'partykit' 連携はオプションのソフト依存です。
 
-English version: README.md
+English version:
+[README.md](https://github.com/morimotoosamu/chaidr/blob/HEAD/README.md)
 
 ## 特徴
 
@@ -40,12 +41,12 @@ CRAN 公開後はリリース版をインストールできます。
 install.packages("chaidr")
 ```
 
-それまでは、ローカルのソースから開発版をインストールしてください。
+それまでは、[GitHub](https://github.com/morimotoosamu/chaidr) から開発版を
+インストールできます。
 
 ``` r
-# パッケージルートディレクトリで
-# install.packages("devtools")
-devtools::install()
+# install.packages("remotes")
+remotes::install_github("morimotoosamu/chaidr")
 ```
 
 ## クイックスタート

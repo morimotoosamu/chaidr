@@ -14,3 +14,4 @@
 ^README\.ja\.md$
 ^DESCRIPTION\.bak$
 ^cran-comments\.md$
+^\.github$

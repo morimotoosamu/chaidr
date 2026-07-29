@@ -18,7 +18,8 @@ chaid_table(fit, target = NULL)
 
 - fit:
 
-  A fitted `"chaid"` object returned by [`chaid()`](chaid.md).
+  A fitted `"chaid"` object returned by
+  [`chaid()`](https://morimotoosamu.github.io/chaidr/reference/chaid.md).
 
 - target:
 
@@ -38,8 +39,9 @@ coincide unless case weights are used.
 
 ## See also
 
-[`chaid_rules()`](chaid_rules.md), [`chaid_gains()`](chaid_gains.md),
-[`chaid_importance()`](chaid_importance.md)
+[`chaid_rules()`](https://morimotoosamu.github.io/chaidr/reference/chaid_rules.md),
+[`chaid_gains()`](https://morimotoosamu.github.io/chaidr/reference/chaid_gains.md),
+[`chaid_importance()`](https://morimotoosamu.github.io/chaidr/reference/chaid_importance.md)
 
 ## Examples
 
@@ -57,11 +59,11 @@ chaid_table(fit)
 #> 7    7     1  30  20.0  virginica   0.0000       0.0000      1.0000
 #>                         rule
 #> 1                     (root)
-#> 2         Petal.Length ≤ 1.6
-#> 3 Petal.Length が (1.6, 3.8]
-#> 4 Petal.Length が (3.8, 4.6]
-#> 5 Petal.Length が (4.6, 4.9]
-#> 6 Petal.Length が (4.9, 5.3]
+#> 2        Petal.Length <= 1.6
+#> 3 Petal.Length in (1.6, 3.8]
+#> 4 Petal.Length in (3.8, 4.6]
+#> 5 Petal.Length in (4.6, 4.9]
+#> 6 Petal.Length in (4.9, 5.3]
 #> 7         Petal.Length > 5.3
 chaid_table(fit, target = "virginica")
 #>   node depth   n pct_n prediction p_setosa p_versicolor p_virginica
@@ -74,10 +76,10 @@ chaid_table(fit, target = "virginica")
 #> 7    7     1  30  20.0  virginica   0.0000       0.0000      1.0000
 #>   response_rate index                       rule
 #> 1        0.3333 100.0                     (root)
-#> 2        0.0000   0.0         Petal.Length ≤ 1.6
-#> 3        0.0000   0.0 Petal.Length が (1.6, 3.8]
-#> 4        0.0312   9.4 Petal.Length が (3.8, 4.6]
-#> 5        0.3571 107.1 Petal.Length が (4.6, 4.9]
-#> 6        0.8750 262.5 Petal.Length が (4.9, 5.3]
+#> 2        0.0000   0.0        Petal.Length <= 1.6
+#> 3        0.0000   0.0 Petal.Length in (1.6, 3.8]
+#> 4        0.0312   9.4 Petal.Length in (3.8, 4.6]
+#> 5        0.3571 107.1 Petal.Length in (4.6, 4.9]
+#> 6        0.8750 262.5 Petal.Length in (4.9, 5.3]
 #> 7        1.0000 300.0         Petal.Length > 5.3
 ```

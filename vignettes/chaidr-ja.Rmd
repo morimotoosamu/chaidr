@@ -1,5 +1,5 @@
 ---
-title: "chaidr 詳細チュートリアル（日本語）"
+title: "chaidr detailed tutorial (Japanese)"
 output:
   rmarkdown::html_vignette:
     toc: true

@@ -19,7 +19,8 @@ print(x, ...)
 
 - fit:
 
-  A fitted `"chaid"` object returned by [`chaid()`](chaid.md).
+  A fitted `"chaid"` object returned by
+  [`chaid()`](https://morimotoosamu.github.io/chaidr/reference/chaid.md).
 
 - newdata:
 
@@ -49,7 +50,8 @@ available.
 
 ## See also
 
-[`chaid_gains()`](chaid_gains.md), [`predict.chaid()`](predict.chaid.md)
+[`chaid_gains()`](https://morimotoosamu.github.io/chaidr/reference/chaid_gains.md),
+[`predict.chaid()`](https://morimotoosamu.github.io/chaidr/reference/predict.chaid.md)
 
 ## Examples
 
@@ -59,9 +61,10 @@ idx <- sample(nrow(iris), 100)
 fit <- chaid(Species ~ ., data = iris[idx, ],
              control = chaid_control(min_parent = 30, min_child = 10))
 chaid_validate(fit, iris[-idx, ])
-#> CHAID 安定性評価（検証データ n = 50 ）
-#> 検証データ精度: 0.9 
-#> （rate = 予測クラスの構成比 / 連続目的変数では平均。 diff_rate の絶対値が大きいノードは検証データで再現していない）
+#> CHAID stability assessment (validation n = 50 )
+#> Validation accuracy: 0.9 
+#> (rate = share of the predicted class, or the mean for continuous responses.
+#>  Nodes with a large |diff_rate| do not replicate on the validation data.)
 #> 
 #>  node prediction train_pct_n test_pct_n train_rate test_rate diff_rate
 #>     2     setosa          28         32     1.0000    1.0000    0.0000

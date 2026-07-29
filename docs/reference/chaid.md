@@ -53,7 +53,7 @@ chaid(
 - control:
 
   A `"chaid_control"` object created by
-  [`chaid_control()`](chaid_control.md).
+  [`chaid_control()`](https://morimotoosamu.github.io/chaidr/reference/chaid_control.md).
 
 - costs:
 
@@ -98,10 +98,11 @@ Applied Statistics*, 18(1), 49-62.
 
 ## See also
 
-[`chaid_control()`](chaid_control.md),
-[`predict.chaid()`](predict.chaid.md),
-[`chaid_table()`](chaid_table.md), [`chaid_rules()`](chaid_rules.md),
-[`plot.chaid()`](plot.chaid.md)
+[`chaid_control()`](https://morimotoosamu.github.io/chaidr/reference/chaid_control.md),
+[`predict.chaid()`](https://morimotoosamu.github.io/chaidr/reference/predict.chaid.md),
+[`chaid_table()`](https://morimotoosamu.github.io/chaidr/reference/chaid_table.md),
+[`chaid_rules()`](https://morimotoosamu.github.io/chaidr/reference/chaid_rules.md),
+[`plot.chaid()`](https://morimotoosamu.github.io/chaidr/reference/plot.chaid.md)
 
 ## Examples
 
@@ -109,11 +110,11 @@ Applied Statistics*, 18(1), 49-62.
 fit <- chaid(Species ~ ., data = iris,
              control = chaid_control(min_parent = 30, min_child = 10))
 print(fit)
-#> CHAID 決定木 (method = "chaid")
-#> 目的変数: Species (カテゴリカル) 
-#> 有効ケース数: 150 （データ 150 行） 
+#> CHAID decision tree (method = "chaid")
+#> Response: Species (categorical) 
+#> Valid cases: 150 (data: 150 rows) 
 #> 
-#> [1] root: setosa (33.3%), n=150 | 分割: Petal.Length (adj.p=1.35e-44, chi2=243.8, B=126)
+#> [1] root: setosa (33.3%), n=150 | split: Petal.Length (adj.p=1.35e-44, chi2=243.8, B=126)
 #>   [2] Petal.Length in {<= 1.6}: setosa (100.0%), n=44 *
 #>   [3] Petal.Length in {(1.6, 3.8]}: versicolor (57.1%), n=14 *
 #>   [4] Petal.Length in {(3.8, 4.6]}: versicolor (96.9%), n=32 *

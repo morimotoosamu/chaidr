@@ -24,7 +24,8 @@ plot(
 
 - x:
 
-  A fitted `"chaid"` object returned by [`chaid()`](chaid.md).
+  A fitted `"chaid"` object returned by
+  [`chaid()`](https://morimotoosamu.github.io/chaidr/reference/chaid.md).
 
 - cex:
 
@@ -59,8 +60,10 @@ The fitted object, invisibly.
 
 ## See also
 
-[`chaid()`](chaid.md), [`chaid_dot()`](chaid_dot.md) for
-publication-quality Graphviz output, [`chaid_plotly()`](chaid_plotly.md)
+[`chaid()`](https://morimotoosamu.github.io/chaidr/reference/chaid.md),
+[`chaid_dot()`](https://morimotoosamu.github.io/chaidr/reference/chaid_dot.md)
+for publication-quality Graphviz output,
+[`chaid_plotly()`](https://morimotoosamu.github.io/chaidr/reference/chaid_plotly.md)
 for an interactive version.
 
 ## Examples

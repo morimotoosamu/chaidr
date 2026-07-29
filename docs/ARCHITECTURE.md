@@ -4,9 +4,10 @@
 
 `R/` 配下は、IBM SPSS の CHAID / Exhaustive CHAID 決定木を base R
 のみで再実装したスクリプト群である。IBM SPSS Statistics Algorithms の
-“CHAID and Exhaustive CHAID Algorithms”（リポジトリ同梱の
-`TREE-CHAID.pdf`）を仕様の正とし、Kass (1980) の標準アルゴリズム、Biggs
-et al. (1991) の Exhaustive 版、順序型＋欠損の Floating
+“CHAID and Exhaustive CHAID Algorithms”（`TREE-CHAID.pdf`。元リポジトリ
+`claude_workspace\chaid` に同梱）を仕様の正とし、Kass (1980)
+の標準アルゴリズム、Biggs et al. (1991) の Exhaustive 版、順序型＋欠損の
+Floating
 処理までを網羅する。目的変数はカテゴリカル（名義）・順序カテゴリカル・連続の3型に対応し、それぞれ
 Pearson χ² / Goodman row effects H² / 一元配置 ANOVA F
 で分割の有意性を判定する。
@@ -79,7 +80,7 @@ flowchart TD
 | 03 | `R/03_tests.R` | p 値計算。χ² / G² / row effects H² / ANOVA F と期待度数推定 |
 | 04 | `R/04_merge.R` | 結合フェーズ。カテゴリ統合ループの中核 |
 | 05 | `R/05_grow.R` | 木の再帰構築・分割変数選択・停止規則 |
-| 06 | `R/06_chaid.R` | ユーザー API。[`chaid_control()`](reference/chaid_control.md) と [`chaid()`](reference/chaid.md) |
+| 06 | `R/06_chaid.R` | ユーザー API。[`chaid_control()`](https://morimotoosamu.github.io/chaidr/reference/chaid_control.md) と [`chaid()`](https://morimotoosamu.github.io/chaidr/reference/chaid.md) |
 | 07 | `R/07_predict.R` | 学習済み木による予測とルーティング |
 | 08 | `R/08_methods.R` | `print` / `summary` メソッドと分割ラベル整形 |
 | 09 | `R/09_plot.R` | base graphics による木の描画。レイアウト計算を他の可視化と共用 |
@@ -100,7 +101,7 @@ flowchart TD
 
 ### 前処理（`chaid()`）
 
-[`chaid()`](reference/chaid.md)
+[`chaid()`](https://morimotoosamu.github.io/chaidr/reference/chaid.md)
 は式とデータフレームを受け取り、[`stats::model.frame()`](https://rdrr.io/r/stats/model.frame.html)
 で目的変数と予測変数を切り出す。欠損は `na.pass` でそのまま通し、CHAID
 自身のルールで扱う。
@@ -269,7 +270,8 @@ p 値を使うと有意になりすぎる。補正乗数 `B` を掛けて
 
 ## 木オブジェクトのデータ構造
 
-[`chaid()`](reference/chaid.md) の返り値は S3 クラス `"chaid"`
+[`chaid()`](https://morimotoosamu.github.io/chaidr/reference/chaid.md)
+の返り値は S3 クラス `"chaid"`
 のリストで、可視化・検査・予測のすべてがこの構造を契約点として参照する。ここを変更すると出力層全体に波及する。
 
     chaid
@@ -310,7 +312,8 @@ partykit
 
 ## 予測とルーティング
 
-[`predict.chaid()`](reference/predict.chaid.md) は3ステップで動く。
+[`predict.chaid()`](https://morimotoosamu.github.io/chaidr/reference/predict.chaid.md)
+は3ステップで動く。
 
 1.  `recode_newdata()`
     が新データを学習時のコード体系へ変換する。連続変数は学習時の境界で
@@ -327,21 +330,23 @@ partykit
 のフォールバックは `route_children()`
 が決める。順序型はコード距離が最小のグループへ送り、名義型とその他は最大ノードサイズの子へ送る。未知水準を検出した場合は警告を出す。
 
-[`chaid_gains()`](reference/chaid_gains.md) /
-[`chaid_validate()`](reference/chaid_validate.md) /
-[`chaid_as_party()`](reference/chaid_as_party.md) はいずれも内部で
-`predict(..., type = "node")`
+[`chaid_gains()`](https://morimotoosamu.github.io/chaidr/reference/chaid_gains.md)
+/
+[`chaid_validate()`](https://morimotoosamu.github.io/chaidr/reference/chaid_validate.md)
+/
+[`chaid_as_party()`](https://morimotoosamu.github.io/chaidr/reference/chaid_as_party.md)
+はいずれも内部で `predict(..., type = "node")`
 を呼び、末端ノードへの割当を得てから集計する。
 
 ## 分析・検査 API
 
 | 関数 | 用途 | 特記事項 |
 |----|----|----|
-| [`chaid_table()`](reference/chaid_table.md) | 末端ノードの要約表。構成比・反応率・インデックス値 | 先頭行が root（インデックス100の基準）。`target` 指定で反応率とインデックスを追加 |
-| [`chaid_rules()`](reference/chaid_rules.md) | ノード到達条件のルール化 | `"text"`（日本語）/ `"sql"`（WHERE 句）/ `"r"`（論理式）。R 形式は `eval` でノード割当を厳密に再現でき、17有効桁で数値を出力する |
-| [`chaid_importance()`](reference/chaid_importance.md) | 変数重要度 | SPSS に公式指標がないための独自ヒューリスティック。ノードサイズ比 × (−log10 p_adj) の総和 |
-| [`chaid_gains()`](reference/chaid_gains.md) | ゲイン・リフト表 | 学習時統計または新データで集計。[`plot()`](https://rdrr.io/r/graphics/plot.default.html) で累積ゲイン曲線／リフト曲線 |
-| [`chaid_validate()`](reference/chaid_validate.md) | 検証データでの安定性評価 | ノード別の構成比・反応率を学習時と比較。全体指標は accuracy または RMSE / R² |
+| [`chaid_table()`](https://morimotoosamu.github.io/chaidr/reference/chaid_table.md) | 末端ノードの要約表。構成比・反応率・インデックス値 | 先頭行が root（インデックス100の基準）。`target` 指定で反応率とインデックスを追加 |
+| [`chaid_rules()`](https://morimotoosamu.github.io/chaidr/reference/chaid_rules.md) | ノード到達条件のルール化 | `"text"`（日本語）/ `"sql"`（WHERE 句）/ `"r"`（論理式）。R 形式は `eval` でノード割当を厳密に再現でき、17有効桁で数値を出力する |
+| [`chaid_importance()`](https://morimotoosamu.github.io/chaidr/reference/chaid_importance.md) | 変数重要度 | SPSS に公式指標がないための独自ヒューリスティック。ノードサイズ比 × (−log10 p_adj) の総和 |
+| [`chaid_gains()`](https://morimotoosamu.github.io/chaidr/reference/chaid_gains.md) | ゲイン・リフト表 | 学習時統計または新データで集計。[`plot()`](https://rdrr.io/r/graphics/plot.default.html) で累積ゲイン曲線／リフト曲線 |
+| [`chaid_validate()`](https://morimotoosamu.github.io/chaidr/reference/chaid_validate.md) | 検証データでの安定性評価 | ノード別の構成比・反応率を学習時と比較。全体指標は accuracy または RMSE / R² |
 
 ルール生成は `node_conditions()` が root
 からのパスを辿って変数ごとの許容コード集合を集める（同じ変数が複数回使われた場合は交差を取る）。`render_condition()`
@@ -349,7 +354,7 @@ partykit
 R 形式では [`deparse()`](https://rdrr.io/r/base/deparse.html)、SQL
 形式では ANSI の二重化で処理する。
 
-[`chaid_importance()`](reference/chaid_importance.md)
+[`chaid_importance()`](https://morimotoosamu.github.io/chaidr/reference/chaid_importance.md)
 が独自指標である点は注意が必要である。χ² と F
 は自由度が異なり直接加算できないため p
 値ベースの指標を採っているが、SPSS の出力と一致する保証はない。
@@ -360,15 +365,16 @@ R 形式では [`deparse()`](https://rdrr.io/r/base/deparse.html)、SQL
 
 | 関数 | 出力 | 依存 |
 |----|----|----|
-| [`plot.chaid()`](reference/plot.chaid.md) | base graphics のプロット | なし |
-| [`chaid_dot()`](reference/chaid_dot.md) / [`chaid_graphviz()`](reference/chaid_dot.md) | Graphviz DOT 文字列 / htmlwidget | DiagrammeR（レンダリング時のみ） |
-| [`chaid_plotly()`](reference/chaid_plotly.md) | インタラクティブ htmlwidget | plotly |
-| [`chaid_as_party()`](reference/chaid_as_party.md) | partykit `constparty` | partykit |
+| [`plot.chaid()`](https://morimotoosamu.github.io/chaidr/reference/plot.chaid.md) | base graphics のプロット | なし |
+| [`chaid_dot()`](https://morimotoosamu.github.io/chaidr/reference/chaid_dot.md) / [`chaid_graphviz()`](https://morimotoosamu.github.io/chaidr/reference/chaid_dot.md) | Graphviz DOT 文字列 / htmlwidget | DiagrammeR（レンダリング時のみ） |
+| [`chaid_plotly()`](https://morimotoosamu.github.io/chaidr/reference/chaid_plotly.md) | インタラクティブ htmlwidget | plotly |
+| [`chaid_as_party()`](https://morimotoosamu.github.io/chaidr/reference/chaid_as_party.md) | partykit `constparty` | partykit |
 
 共有部品が3つある。**レイアウト計算**
 `tree_layout()`（`09_plot.R`）は末端ノードを DFS
-順に等間隔配置し内部ノードを子の中央に置くもので、[`plot.chaid()`](reference/plot.chaid.md)
-と [`chaid_plotly()`](reference/chaid_plotly.md)
+順に等間隔配置し内部ノードを子の中央に置くもので、[`plot.chaid()`](https://morimotoosamu.github.io/chaidr/reference/plot.chaid.md)
+と
+[`chaid_plotly()`](https://morimotoosamu.github.io/chaidr/reference/chaid_plotly.md)
 が共用する。**分割ラベル整形**
 `format_group()`（`08_methods.R`）は連続変数の隣接ビンを区間表記へまとめるもので、`print`
 / base plot / DOT / plotly の4か所から呼ばれる。**HTML エスケープ**
@@ -380,12 +386,13 @@ partykit 変換は、ビン化された連続変数を「区間ラベルの順�
 party のデータフレームに載せ、全分割を index 型 `partysplit`
 に統一する。これにより欠損も明示的な水準としてルーティングされる。変換した
 party オブジェクトは可視化・構造検査用であり、新データの予測には
-[`predict.chaid()`](reference/predict.chaid.md) を使う。
+[`predict.chaid()`](https://morimotoosamu.github.io/chaidr/reference/predict.chaid.md)
+を使う。
 
 ## 設定リファレンス
 
-[`chaid_control()`](reference/chaid_control.md) の既定値は SPSS UI
-の既定に合わせてある。
+[`chaid_control()`](https://morimotoosamu.github.io/chaidr/reference/chaid_control.md)
+の既定値は SPSS UI の既定に合わせてある。
 
 | パラメータ | 既定 | 影響範囲 |
 |----|----|----|
@@ -403,8 +410,9 @@ party オブジェクトは可視化・構造検査用であり、新データ�
 | `epsilon` / `max_iter` | 1e-3 / 100 | IPF・row effects 反復の収束条件 |
 | `adjust_across` | `"none"` | 予測変数間の多重比較補正 |
 
-[`chaid()`](reference/chaid.md) 側の引数では `costs`（誤分類コスト行列
-`C[truth, pred]`、rpart の loss と同じ規約）と
+[`chaid()`](https://morimotoosamu.github.io/chaidr/reference/chaid.md)
+側の引数では `costs`（誤分類コスト行列 `C[truth, pred]`、rpart の loss
+と同じ規約）と
 `y_scores`（順序型目的変数のクラススコア）が挙動を変える。コスト行列はノードの予測クラスを最頻クラスから期待コスト最小のクラスへ変えるが、SPSS
 準拠で**木の成長と検定には影響しない**。
 
@@ -425,16 +433,16 @@ holm は bonferroni と常に同一の木を与えることの3点である。
 | 検定 | `R/03_tests.R` | `suffstat_pvalue()`, `pval_chisq_tab()`, `pval_ftest_tab()`, `pval_roweffects_tab()`, `expected_freq()`, `roweffects_expected()`, `node_pvalue()` |
 | 結合 | `R/04_merge.R` | `merge_predictor()`, `merge_core_standard()`, `merge_core_exhaustive()`, `merge_floating()`, `absorb_small_groups()`, `pair_pvalue()`, `config_pvalue()`, `fill_pair_cache()`, `drop_merge_cache()`, `best_binary_split()` |
 | 成長 | `R/05_grow.R` | `grow_node()`, `node_stats()`, `better_split()` |
-| API | `R/06_chaid.R` | [`chaid()`](reference/chaid.md), [`chaid_control()`](reference/chaid_control.md), `prep_predictor()`, `bin_labels()` |
-| 予測 | `R/07_predict.R` | [`predict.chaid()`](reference/predict.chaid.md), `recode_newdata()`, `route_children()` |
-| 表示 | `R/08_methods.R` | [`print.chaid()`](reference/print.chaid.md), [`summary.chaid()`](reference/print.chaid.md), `format_group()`, `format_node_stats()` |
-| 描画 | `R/09_plot.R` | [`plot.chaid()`](reference/plot.chaid.md), `tree_layout()`, `trunc_label()` |
-| partykit | `R/10_partykit.R` | [`chaid_as_party()`](reference/chaid_as_party.md), [`as.party.chaid()`](reference/chaid_as_party.md) |
-| 検査 | `R/11_inspect.R` | [`chaid_table()`](reference/chaid_table.md), [`chaid_rules()`](reference/chaid_rules.md), [`chaid_importance()`](reference/chaid_importance.md), `node_conditions()`, `render_condition()` |
-| ゲイン | `R/12_gains.R` | [`chaid_gains()`](reference/chaid_gains.md), [`print.chaid_gains()`](reference/chaid_gains.md), [`plot.chaid_gains()`](reference/chaid_gains.md) |
-| 検証 | `R/13_validate.R` | [`chaid_validate()`](reference/chaid_validate.md), [`print.chaid_validation()`](reference/chaid_validate.md) |
-| Graphviz | `R/14_graphviz.R` | [`chaid_dot()`](reference/chaid_dot.md), [`chaid_graphviz()`](reference/chaid_dot.md), `esc_dot()`, [`print.chaid_dot()`](reference/chaid_dot.md) |
-| plotly | `R/15_plotly.R` | [`chaid_plotly()`](reference/chaid_plotly.md) |
+| API | `R/06_chaid.R` | [`chaid()`](https://morimotoosamu.github.io/chaidr/reference/chaid.md), [`chaid_control()`](https://morimotoosamu.github.io/chaidr/reference/chaid_control.md), `prep_predictor()`, `bin_labels()` |
+| 予測 | `R/07_predict.R` | [`predict.chaid()`](https://morimotoosamu.github.io/chaidr/reference/predict.chaid.md), `recode_newdata()`, `route_children()` |
+| 表示 | `R/08_methods.R` | [`print.chaid()`](https://morimotoosamu.github.io/chaidr/reference/print.chaid.md), [`summary.chaid()`](https://morimotoosamu.github.io/chaidr/reference/print.chaid.md), `format_group()`, `format_node_stats()` |
+| 描画 | `R/09_plot.R` | [`plot.chaid()`](https://morimotoosamu.github.io/chaidr/reference/plot.chaid.md), `tree_layout()`, `trunc_label()` |
+| partykit | `R/10_partykit.R` | [`chaid_as_party()`](https://morimotoosamu.github.io/chaidr/reference/chaid_as_party.md), [`as.party.chaid()`](https://morimotoosamu.github.io/chaidr/reference/chaid_as_party.md) |
+| 検査 | `R/11_inspect.R` | [`chaid_table()`](https://morimotoosamu.github.io/chaidr/reference/chaid_table.md), [`chaid_rules()`](https://morimotoosamu.github.io/chaidr/reference/chaid_rules.md), [`chaid_importance()`](https://morimotoosamu.github.io/chaidr/reference/chaid_importance.md), `node_conditions()`, `render_condition()` |
+| ゲイン | `R/12_gains.R` | [`chaid_gains()`](https://morimotoosamu.github.io/chaidr/reference/chaid_gains.md), [`print.chaid_gains()`](https://morimotoosamu.github.io/chaidr/reference/chaid_gains.md), [`plot.chaid_gains()`](https://morimotoosamu.github.io/chaidr/reference/chaid_gains.md) |
+| 検証 | `R/13_validate.R` | [`chaid_validate()`](https://morimotoosamu.github.io/chaidr/reference/chaid_validate.md), [`print.chaid_validation()`](https://morimotoosamu.github.io/chaidr/reference/chaid_validate.md) |
+| Graphviz | `R/14_graphviz.R` | [`chaid_dot()`](https://morimotoosamu.github.io/chaidr/reference/chaid_dot.md), [`chaid_graphviz()`](https://morimotoosamu.github.io/chaidr/reference/chaid_dot.md), `esc_dot()`, [`print.chaid_dot()`](https://morimotoosamu.github.io/chaidr/reference/chaid_dot.md) |
+| plotly | `R/15_plotly.R` | [`chaid_plotly()`](https://morimotoosamu.github.io/chaidr/reference/chaid_plotly.md) |
 
 テストは `tests/test_*.R` に領域別に置かれ、`tests/run_all.R` が `R/`
 を番号順に source してから全テストを実行する。`stopifnot`
@@ -446,7 +454,7 @@ holm は bonferroni と常に同一の木を与えることの3点である。
   の一致**は予測ルーティングと全出力層の前提である。ノードの削除・並べ替えを導入する場合、`nodes[[id]]`
   で引いている全箇所を洗い出す必要がある。
 - **親の id が子より小さい**という不変条件が
-  [`predict.chaid()`](reference/predict.chaid.md)
+  [`predict.chaid()`](https://morimotoosamu.github.io/chaidr/reference/predict.chaid.md)
   の単一走査ルーティングを成立させている。採番順を変えると予測が壊れる。
 - **`split` の構造**は `print` / 4種の可視化 / ルール抽出 / 重要度 /
   ゲイン表がすべて参照する契約点である。フィールドの追加は安全だが、名前の変更や削除は広範囲に波及する。

@@ -11,8 +11,8 @@
 <script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="CHAID and Exhaustive CHAID Decision Trees">
-<meta name="description" content="A base R implementation of the CHAID (Chi-squared Automatic Interaction Detection) and Exhaustive CHAID decision tree algorithms as specified in the IBM SPSS Statistics Algorithms documentation. Supports nominal, ordinal (with floating missing category), and continuous predictors, and nominal, ordinal, and continuous response variables using Pearson chi-squared, Goodman row-effects, and one-way ANOVA F tests respectively. Includes prediction, rule extraction, gains and lift analysis, validation on holdout data, and visualization via base graphics, Graphviz DOT, plotly, and conversion to partykit objects.">
-<meta property="og:description" content="A base R implementation of the CHAID (Chi-squared Automatic Interaction Detection) and Exhaustive CHAID decision tree algorithms as specified in the IBM SPSS Statistics Algorithms documentation. Supports nominal, ordinal (with floating missing category), and continuous predictors, and nominal, ordinal, and continuous response variables using Pearson chi-squared, Goodman row-effects, and one-way ANOVA F tests respectively. Includes prediction, rule extraction, gains and lift analysis, validation on holdout data, and visualization via base graphics, Graphviz DOT, plotly, and conversion to partykit objects.">
+<meta name="description" content="An implementation in base R of the CHAID (Chi-squared Automatic Interaction Detection) decision tree algorithm of Kass (1980) &lt;doi:10.2307/2986296&gt; and the Exhaustive CHAID variant of Biggs, de Ville, and Suen (1991) &lt;doi:10.1080/02664769100000005&gt;, as specified in the IBM SPSS Statistics Algorithms documentation. Supports nominal, ordinal (with floating missing category), and continuous predictors, and nominal, ordinal, and continuous response variables using Pearson chi-squared, Goodman row-effects, and one-way ANOVA F tests respectively. Includes prediction, rule extraction, gains and lift analysis, validation on holdout data, and visualization via base graphics, Graphviz DOT, plotly, and conversion to partykit objects.">
+<meta property="og:description" content="An implementation in base R of the CHAID (Chi-squared Automatic Interaction Detection) decision tree algorithm of Kass (1980) &lt;doi:10.2307/2986296&gt; and the Exhaustive CHAID variant of Biggs, de Ville, and Suen (1991) &lt;doi:10.1080/02664769100000005&gt;, as specified in the IBM SPSS Statistics Algorithms documentation. Supports nominal, ordinal (with floating missing category), and continuous predictors, and nominal, ordinal, and continuous response variables using Pearson chi-squared, Goodman row-effects, and one-way ANOVA F tests respectively. Includes prediction, rule extraction, gains and lift analysis, validation on holdout data, and visualization via base graphics, Graphviz DOT, plotly, and conversion to partykit objects.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -31,12 +31,21 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="articles/chaidr.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="articles/chaidr-ja.html">chaidr detailed tutorial (Japanese)</a></li>
+  </ul>
+</li>
+<li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/morimotoosamu/chaidr/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -44,9 +53,192 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9">
-A base R implementation of the CHAID (Chi-squared Automatic Interaction Detection) and Exhaustive CHAID decision tree algorithms as specified in the IBM SPSS Statistics Algorithms documentation. Supports nominal, ordinal (with floating missing category), and continuous predictors, and nominal, ordinal, and continuous response variables using Pearson chi-squared, Goodman row-effects, and one-way ANOVA F tests respectively. Includes prediction, rule extraction, gains and lift analysis, validation on holdout data, and visualization via base graphics, 'Graphviz' DOT, 'plotly', and conversion to 'partykit' objects.
-  </main><aside class="col-md-3"><div class="license">
+  <main id="main" class="col-md-9"><div class="section level1">
+<div class="page-header"><h1 id="chaidr">chaidr<a class="anchor" aria-label="anchor" href="#chaidr"></a>
+</h1></div>
+<!-- badges: start -->
+<!-- badges: end -->
+<p>chaidr is a base R implementation of the CHAID (Chi-squared Automatic Interaction Detection) and Exhaustive CHAID decision tree algorithms, as specified in the IBM SPSS Statistics Algorithms documentation (Kass 1980; Biggs, de Ville, and Suen 1991). The core fitting and prediction routines depend only on base R – visualization backends and ‘partykit’ integration are optional soft dependencies.</p>
+<p>日本語版 README は <a href="https://github.com/morimotoosamu/chaidr/blob/HEAD/README.ja.md" class="external-link">README.ja.md</a> を参照してください。</p>
+<div class="section level2">
+<h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
+</h2>
+<ul>
+<li>Standard <strong>CHAID</strong> and <strong>Exhaustive CHAID</strong> tree growing with multi-way splits.</li>
+<li>Predictors: nominal, ordinal (with a <em>floating</em> category for missing values), and continuous (automatically discretized into quantile bins).</li>
+<li>Responses: nominal (Pearson chi-squared test), ordinal (Goodman row-effects model), and continuous (one-way ANOVA F test).</li>
+<li>Frequency weights via <code>freq</code>, reproducing results on pre-aggregated data.</li>
+<li>Prediction of classes, class probabilities, and node membership with <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code>.</li>
+<li>Model inspection: node tables (<code><a href="reference/chaid_table.html">chaid_table()</a></code>), decision rules (<code><a href="reference/chaid_rules.html">chaid_rules()</a></code>), and predictor importance (<code><a href="reference/chaid_importance.html">chaid_importance()</a></code>).</li>
+<li>Evaluation: gains and lift analysis (<code><a href="reference/chaid_gains.html">chaid_gains()</a></code>) and validation on holdout data (<code><a href="reference/chaid_validate.html">chaid_validate()</a></code>).</li>
+<li>Visualization: base graphics <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>, ‘Graphviz’ DOT export (<code><a href="reference/chaid_dot.html">chaid_dot()</a></code>, <code><a href="reference/chaid_dot.html">chaid_graphviz()</a></code>), interactive ‘plotly’ trees (<code><a href="reference/chaid_plotly.html">chaid_plotly()</a></code>), and conversion to ‘partykit’ objects (<code><a href="reference/chaid_as_party.html">chaid_as_party()</a></code>).</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>Once on CRAN, install the released version with:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"chaidr"</span><span class="op">)</span></span></code></pre></div>
+<p>Until then, you can install the development version from <a href="https://github.com/morimotoosamu/chaidr" class="external-link">GitHub</a>:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"morimotoosamu/chaidr"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
+</h2>
+<p>The <code>penguins</code> data set (bundled with R &gt;= 4.5) contains a mix of continuous predictors and missing values, both of which CHAID handles natively.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/morimotoosamu/chaidr" class="external-link">chaidr</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">)</span></span>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chaid.html">chaid</a></span><span class="op">(</span><span class="va">species</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">penguins</span>,</span>
+<span>             control <span class="op">=</span> <span class="fu"><a href="reference/chaid_control.html">chaid_control</a></span><span class="op">(</span>min_parent <span class="op">=</span> <span class="fl">30</span>, min_child <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span><span class="co">#&gt; CHAID decision tree (method = "chaid")</span></span>
+<span><span class="co">#&gt; Response: species (categorical) </span></span>
+<span><span class="co">#&gt; Valid cases: 344 (data: 344 rows) </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [1] root: Adelie (44.2%), n=344 | split: flipper_len (adj.p=2.48e-63, chi2=328.5, B=714)</span></span>
+<span><span class="co">#&gt;   [2] flipper_len in {&lt;= 190}: Adelie (84.8%), n=99 | split: bill_len (adj.p=2.92e-16, chi2=78.21, B=28)</span></span>
+<span><span class="co">#&gt;     [3] bill_len in {&lt;= 40.1}: Adelie (100.0%), n=70 *</span></span>
+<span><span class="co">#&gt;     [4] bill_len in {(40.1, 41.8]}: Adelie (92.3%), n=13 *</span></span>
+<span><span class="co">#&gt;     [5] bill_len in {(41.8, 47.3] | &gt; 49.3}: Chinstrap (87.5%), n=16 *</span></span>
+<span><span class="co">#&gt;   [6] flipper_len in {(190, 196]}: Adelie (67.2%), n=67 | split: bill_len (adj.p=1.66e-13, chi2=58.69, B=9)</span></span>
+<span><span class="co">#&gt;     [7] bill_len in {&lt;= 44.4}: Adelie (100.0%), n=43 *</span></span>
+<span><span class="co">#&gt;     [8] bill_len in {&gt; 44.4}: Chinstrap (91.7%), n=24 *</span></span>
+<span><span class="co">#&gt;   [9] flipper_len in {(196, 202]}: Chinstrap (52.6%), n=38 | split: bill_len (adj.p=2.31e-07, chi2=30.78, B=8)</span></span>
+<span><span class="co">#&gt;     [10] bill_len in {&lt;= 45.9}: Adelie (90.0%), n=20 *</span></span>
+<span><span class="co">#&gt;     [11] bill_len in {&gt; 47.3}: Chinstrap (100.0%), n=18 *</span></span>
+<span><span class="co">#&gt;   [12] flipper_len in {(202, 214] | &lt;NA&gt;}: Gentoo (73.8%), n=61 | split: bill_dep (adj.p=9.69e-12, chi2=56.14, B=15)</span></span>
+<span><span class="co">#&gt;     [13] bill_dep in {&lt;= 16.7}: Gentoo (100.0%), n=44 *</span></span>
+<span><span class="co">#&gt;     [14] bill_dep in {&gt; 17.8 | &lt;NA&gt;}: Chinstrap (64.7%), n=17 *</span></span>
+<span><span class="co">#&gt;   [15] flipper_len in {&gt; 214}: Gentoo (100.0%), n=79 *</span></span></code></pre></div>
+<p>Continuous predictors such as <code>flipper_len</code> are discretized into quantile bins before growing, and statistically similar bins are merged back together, yielding multi-way splits. Groups containing <code>&lt;NA&gt;</code> show where missing values were merged as a floating category. Terminal nodes are marked with <code>*</code>.</p>
+<p>The same tree can be plotted with base graphics (bars show the class distribution within each node):</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span>, main <span class="op">=</span> <span class="st">"CHAID: penguins (species)"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-plot-1.png" alt="" width="100%"></p>
+<p>Prediction uses the standard S3 <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> interface:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit</span>, <span class="va">penguins</span><span class="op">)</span>          <span class="co"># class labels (factor)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">pred</span> <span class="op">==</span> <span class="va">penguins</span><span class="op">$</span><span class="va">species</span><span class="op">)</span>          <span class="co"># training accuracy</span></span>
+<span><span class="co">#&gt; [1] 0.9622093</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit</span>, <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="fl">3</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"prob"</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="co">#&gt;      Adelie Chinstrap Gentoo</span></span>
+<span><span class="co">#&gt; [1,]      1         0      0</span></span>
+<span><span class="co">#&gt; [2,]      1         0      0</span></span>
+<span><span class="co">#&gt; [3,]      1         0      0</span></span></code></pre></div>
+<p>Decision rules for every terminal node:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/chaid_rules.html">chaid_rules</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    node</span></span>
+<span><span class="co">#&gt; 1     3</span></span>
+<span><span class="co">#&gt; 2     4</span></span>
+<span><span class="co">#&gt; 3     5</span></span>
+<span><span class="co">#&gt; 4     7</span></span>
+<span><span class="co">#&gt; 5     8</span></span>
+<span><span class="co">#&gt; 6    10</span></span>
+<span><span class="co">#&gt; 7    11</span></span>
+<span><span class="co">#&gt; 8    13</span></span>
+<span><span class="co">#&gt; 9    14</span></span>
+<span><span class="co">#&gt; 10   15</span></span>
+<span><span class="co">#&gt;                                                                                                  rule</span></span>
+<span><span class="co">#&gt; 1                                                             bill_len &lt;= 40.1 and flipper_len &lt;= 190</span></span>
+<span><span class="co">#&gt; 2                                                     bill_len in (40.1, 41.8] and flipper_len &lt;= 190</span></span>
+<span><span class="co">#&gt; 3                                (bill_len in (41.8, 47.3] or bill_len &gt; 49.3) and flipper_len &lt;= 190</span></span>
+<span><span class="co">#&gt; 4                                                      bill_len &lt;= 44.4 and flipper_len in (190, 196]</span></span>
+<span><span class="co">#&gt; 5                                                       bill_len &gt; 44.4 and flipper_len in (190, 196]</span></span>
+<span><span class="co">#&gt; 6                                                      bill_len &lt;= 45.9 and flipper_len in (196, 202]</span></span>
+<span><span class="co">#&gt; 7                                                       bill_len &gt; 47.3 and flipper_len in (196, 202]</span></span>
+<span><span class="co">#&gt; 8                          bill_dep &lt;= 16.7 and (flipper_len in (202, 214] or flipper_len is missing)</span></span>
+<span><span class="co">#&gt; 9  (bill_dep &gt; 17.8 or bill_dep is missing) and (flipper_len in (202, 214] or flipper_len is missing)</span></span>
+<span><span class="co">#&gt; 10                                                                                  flipper_len &gt; 214</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="key-functions">Key functions<a class="anchor" aria-label="anchor" href="#key-functions"></a>
+</h2>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr>
+<th>Task</th>
+<th>Functions</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Model fitting</td>
+<td>
+<code><a href="reference/chaid.html">chaid()</a></code>, <code><a href="reference/chaid_control.html">chaid_control()</a></code>
+</td>
+</tr>
+<tr>
+<td>Prediction</td>
+<td><code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code></td>
+</tr>
+<tr>
+<td>Inspection</td>
+<td>
+<code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code>, <code><a href="reference/chaid_table.html">chaid_table()</a></code>, <code><a href="reference/chaid_rules.html">chaid_rules()</a></code>, <code><a href="reference/chaid_importance.html">chaid_importance()</a></code>
+</td>
+</tr>
+<tr>
+<td>Evaluation</td>
+<td>
+<code><a href="reference/chaid_gains.html">chaid_gains()</a></code>, <code><a href="reference/chaid_validate.html">chaid_validate()</a></code>
+</td>
+</tr>
+<tr>
+<td>Visualization</td>
+<td>
+<code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>, <code><a href="reference/chaid_dot.html">chaid_dot()</a></code>, <code><a href="reference/chaid_dot.html">chaid_graphviz()</a></code>, <code><a href="reference/chaid_plotly.html">chaid_plotly()</a></code>
+</td>
+</tr>
+<tr>
+<td>partykit integration</td>
+<td><code><a href="reference/chaid_as_party.html">chaid_as_party()</a></code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level2">
+<h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
+</h2>
+<ul>
+<li>
+<code><a href="articles/chaidr.html">vignette("chaidr")</a></code> – a compact introduction (in English).</li>
+<li>
+<code><a href="articles/chaidr-ja.html">vignette("chaidr-ja")</a></code> – a detailed tutorial covering the algorithm, all option settings, evaluation, and visualization (in Japanese).</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<ul>
+<li>Kass, G. V. (1980). An exploratory technique for investigating large quantities of categorical data. <em>Applied Statistics</em>, 29(2), 119–127.</li>
+<li>Biggs, D., de Ville, B., &amp; Suen, E. (1991). A method of choosing multiway partitions for classification and decision trees. <em>Journal of Applied Statistics</em>, 18(1), 49–62.</li>
+<li>IBM Corp. <em>IBM SPSS Statistics Algorithms</em> – “CHAID and Exhaustive CHAID Algorithms”.</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
+</h2>
+<p>MIT (c) Osamu Morimoto</p>
+</div>
+</div>
+  </main><aside class="col-md-3"><div class="links">
+<h2 data-toc-skip>Links</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/morimotoosamu/chaidr/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/morimotoosamu/chaidr/issues" class="external-link">Report a bug</a></li>
+</ul>
+</div>
+
+<div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
@@ -65,7 +257,7 @@ A base R implementation of the CHAID (Chi-squared Automatic Interaction Detectio
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Osamu Morimoto <br><small class="roles"> Author, maintainer </small>   </li>
+<li>Osamu Morimoto <br><small class="roles"> Author, maintainer, copyright holder </small>   </li>
 </ul>
 </div>
 

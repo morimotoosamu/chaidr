@@ -22,7 +22,8 @@ summary(object, ...)
 
 - x, object:
 
-  A fitted `"chaid"` object returned by [`chaid()`](chaid.md).
+  A fitted `"chaid"` object returned by
+  [`chaid()`](https://morimotoosamu.github.io/chaidr/reference/chaid.md).
 
 - ...:
 
@@ -34,7 +35,7 @@ The fitted object, invisibly.
 
 ## See also
 
-[`chaid()`](chaid.md)
+[`chaid()`](https://morimotoosamu.github.io/chaidr/reference/chaid.md)
 
 ## Examples
 
@@ -42,11 +43,11 @@ The fitted object, invisibly.
 fit <- chaid(Species ~ ., data = iris,
              control = chaid_control(min_parent = 30, min_child = 10))
 print(fit)
-#> CHAID 決定木 (method = "chaid")
-#> 目的変数: Species (カテゴリカル) 
-#> 有効ケース数: 150 （データ 150 行） 
+#> CHAID decision tree (method = "chaid")
+#> Response: Species (categorical) 
+#> Valid cases: 150 (data: 150 rows) 
 #> 
-#> [1] root: setosa (33.3%), n=150 | 分割: Petal.Length (adj.p=1.35e-44, chi2=243.8, B=126)
+#> [1] root: setosa (33.3%), n=150 | split: Petal.Length (adj.p=1.35e-44, chi2=243.8, B=126)
 #>   [2] Petal.Length in {<= 1.6}: setosa (100.0%), n=44 *
 #>   [3] Petal.Length in {(1.6, 3.8]}: versicolor (57.1%), n=14 *
 #>   [4] Petal.Length in {(3.8, 4.6]}: versicolor (96.9%), n=32 *
@@ -54,11 +55,11 @@ print(fit)
 #>   [6] Petal.Length in {(4.9, 5.3]}: virginica (87.5%), n=16 *
 #>   [7] Petal.Length in {> 5.3}: virginica (100.0%), n=30 *
 summary(fit)
-#> CHAID 決定木 (method = "chaid")
-#> 目的変数: Species (カテゴリカル) 
-#> 有効ケース数: 150 （データ 150 行） 
+#> CHAID decision tree (method = "chaid")
+#> Response: Species (categorical) 
+#> Valid cases: 150 (data: 150 rows) 
 #> 
-#> [1] root: setosa (33.3%), n=150 | 分割: Petal.Length (adj.p=1.35e-44, chi2=243.8, B=126)
+#> [1] root: setosa (33.3%), n=150 | split: Petal.Length (adj.p=1.35e-44, chi2=243.8, B=126)
 #>   [2] Petal.Length in {<= 1.6}: setosa (100.0%), n=44 *
 #>   [3] Petal.Length in {(1.6, 3.8]}: versicolor (57.1%), n=14 *
 #>   [4] Petal.Length in {(3.8, 4.6]}: versicolor (96.9%), n=32 *
@@ -66,12 +67,12 @@ summary(fit)
 #>   [6] Petal.Length in {(4.9, 5.3]}: virginica (87.5%), n=16 *
 #>   [7] Petal.Length in {> 5.3}: virginica (100.0%), n=30 *
 #> 
-#> 設定: alpha_merge=0.05, alpha_split=0.05, bonferroni=TRUE, adjust_across=none, max_depth=3, min_parent=30, min_child=10, n_bins=10
+#> Settings: alpha_merge=0.05, alpha_split=0.05, bonferroni=TRUE, adjust_across=none, max_depth=3, min_parent=30, min_child=10, n_bins=10
 #> 
-#> リスク推定（学習データ）: 0.0933 （誤分類率） 
+#> Risk estimate (training data): 0.0933 (misclassification rate) 
 #> 
-#> 末端ノード: 6 個
-#> 停止理由:
+#> Terminal nodes: 6 
+#> Stopping reasons:
 #>   min_child: 1
 #>   min_parent: 3
 #>   pure: 2

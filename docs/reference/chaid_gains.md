@@ -20,14 +20,15 @@ plot(x, type = c("gains", "lift"), ...)
 
 - fit:
 
-  A fitted `"chaid"` object returned by [`chaid()`](chaid.md).
+  A fitted `"chaid"` object returned by
+  [`chaid()`](https://morimotoosamu.github.io/chaidr/reference/chaid.md).
 
 - data:
 
   Optional data frame. If `NULL` (default), node statistics from
   training are used. If supplied, cases are routed with
-  [`predict.chaid()`](predict.chaid.md) and the table is recomputed,
-  e.g. for evaluation on holdout data.
+  [`predict.chaid()`](https://morimotoosamu.github.io/chaidr/reference/predict.chaid.md)
+  and the table is recomputed, e.g. for evaluation on holdout data.
 
 - target:
 
@@ -67,8 +68,8 @@ available.
 
 ## See also
 
-[`chaid_table()`](chaid_table.md),
-[`chaid_validate()`](chaid_validate.md)
+[`chaid_table()`](https://morimotoosamu.github.io/chaidr/reference/chaid_table.md),
+[`chaid_validate()`](https://morimotoosamu.github.io/chaidr/reference/chaid_validate.md)
 
 ## Examples
 
@@ -77,8 +78,8 @@ fit <- chaid(Species ~ ., data = iris,
              control = chaid_control(min_parent = 30, min_child = 10))
 g <- chaid_gains(fit, target = "virginica")
 print(g)
-#> CHAID ゲイン表 （target = virginica） 
-#> 全体反応率: 0.3333 
+#> CHAID gains table (target = virginica) 
+#> Overall response rate: 0.3333 
 #> 
 #>  node  n pct_n resp pct_resp   rate index cum_pct_n cum_pct_resp cum_lift
 #>     7 30 20.00   30       60 1.0000 300.0     20.00           60    3.000
@@ -87,10 +88,7 @@ print(g)
 #>     4 32 21.33    1        2 0.0312   9.4     61.33          100    1.631
 #>     2 44 29.33    0        0 0.0000   0.0     90.67          100    1.103
 #>     3 14  9.33    0        0 0.0000   0.0    100.00          100    1.000
-# The axis labels of the plots contain Japanese text, which the pdf()
-# device used by R CMD check cannot render on all platforms.
-if (FALSE) { # \dontrun{
 plot(g)
+
 plot(g, type = "lift")
-} # }
 ```

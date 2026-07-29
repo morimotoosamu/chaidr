@@ -25,9 +25,16 @@ continuous responses)."></head><body>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/chaidr.html">Get started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/chaidr-ja.html">chaidr detailed tutorial (Japanese)</a></li>
+  </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/morimotoosamu/chaidr/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -37,7 +44,7 @@ continuous responses)."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Print and summarise a CHAID tree</h1>
-
+      <small class="dont-index">Source: <a href="https://github.com/morimotoosamu/chaidr/blob/HEAD/R/08_methods.R" class="external-link"><code>R/08_methods.R</code></a></small>
       <div class="d-none name"><code>print.chaid.Rd</code></div>
     </div>
 
@@ -85,11 +92,11 @@ continuous responses).</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="chaid.html">chaid</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">iris</span>,</span></span>
 <span class="r-in"><span>             control <span class="op">=</span> <span class="fu"><a href="chaid_control.html">chaid_control</a></span><span class="op">(</span>min_parent <span class="op">=</span> <span class="fl">30</span>, min_child <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CHAID 決定木 (method = "chaid")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 目的変数: Species (カテゴリカル) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 有効ケース数: 150 （データ 150 行） </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CHAID decision tree (method = "chaid")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Response: Species (categorical) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valid cases: 150 (data: 150 rows) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] root: setosa (33.3%), n=150 | 分割: Petal.Length (adj.p=1.35e-44, chi2=243.8, B=126)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] root: setosa (33.3%), n=150 | split: Petal.Length (adj.p=1.35e-44, chi2=243.8, B=126)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [2] Petal.Length in {&lt;= 1.6}: setosa (100.0%), n=44 *</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [3] Petal.Length in {(1.6, 3.8]}: versicolor (57.1%), n=14 *</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [4] Petal.Length in {(3.8, 4.6]}: versicolor (96.9%), n=32 *</span>
@@ -97,11 +104,11 @@ continuous responses).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [6] Petal.Length in {(4.9, 5.3]}: virginica (87.5%), n=16 *</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [7] Petal.Length in {&gt; 5.3}: virginica (100.0%), n=30 *</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CHAID 決定木 (method = "chaid")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 目的変数: Species (カテゴリカル) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 有効ケース数: 150 （データ 150 行） </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CHAID decision tree (method = "chaid")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Response: Species (categorical) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valid cases: 150 (data: 150 rows) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] root: setosa (33.3%), n=150 | 分割: Petal.Length (adj.p=1.35e-44, chi2=243.8, B=126)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] root: setosa (33.3%), n=150 | split: Petal.Length (adj.p=1.35e-44, chi2=243.8, B=126)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [2] Petal.Length in {&lt;= 1.6}: setosa (100.0%), n=44 *</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [3] Petal.Length in {(1.6, 3.8]}: versicolor (57.1%), n=14 *</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [4] Petal.Length in {(3.8, 4.6]}: versicolor (96.9%), n=32 *</span>
@@ -109,12 +116,12 @@ continuous responses).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [6] Petal.Length in {(4.9, 5.3]}: virginica (87.5%), n=16 *</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [7] Petal.Length in {&gt; 5.3}: virginica (100.0%), n=30 *</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 設定: alpha_merge=0.05, alpha_split=0.05, bonferroni=TRUE, adjust_across=none, max_depth=3, min_parent=30, min_child=10, n_bins=10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Settings: alpha_merge=0.05, alpha_split=0.05, bonferroni=TRUE, adjust_across=none, max_depth=3, min_parent=30, min_child=10, n_bins=10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> リスク推定（学習データ）: 0.0933 （誤分類率） </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Risk estimate (training data): 0.0933 (misclassification rate) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 末端ノード: 6 個</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 停止理由:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Terminal nodes: 6 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Stopping reasons:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   min_child: 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   min_parent: 3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   pure: 2</span>

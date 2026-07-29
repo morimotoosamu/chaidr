@@ -17,7 +17,8 @@ predict(object, newdata, type = c("response", "prob", "node"), ...)
 
 - object:
 
-  A fitted `"chaid"` object returned by [`chaid()`](chaid.md).
+  A fitted `"chaid"` object returned by
+  [`chaid()`](https://morimotoosamu.github.io/chaidr/reference/chaid.md).
 
 - newdata:
 
@@ -42,7 +43,7 @@ level, or an integer vector of node ids.
 
 ## See also
 
-[`chaid()`](chaid.md)
+[`chaid()`](https://morimotoosamu.github.io/chaidr/reference/chaid.md)
 
 ## Examples
 

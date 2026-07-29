@@ -28,14 +28,16 @@ chaid_graphviz(fit, ...)
 
 - fit:
 
-  A fitted `"chaid"` object returned by [`chaid()`](chaid.md).
+  A fitted `"chaid"` object returned by
+  [`chaid()`](https://morimotoosamu.github.io/chaidr/reference/chaid.md).
 
 - palette:
 
   Vector of class colours for categorical responses (default
   `grDevices::hcl.colors(n, "Dark 3")`, matching
-  [`plot.chaid()`](plot.chaid.md)). For continuous responses node fills
-  use a white-to-steelblue gradient of the node means.
+  [`plot.chaid()`](https://morimotoosamu.github.io/chaidr/reference/plot.chaid.md)).
+  For continuous responses node fills use a white-to-steelblue gradient
+  of the node means.
 
 - rankdir:
 
@@ -75,7 +77,8 @@ source). For `chaid_graphviz()`, an 'htmlwidget' as returned by
 
 ## See also
 
-[`plot.chaid()`](plot.chaid.md), [`chaid_plotly()`](chaid_plotly.md)
+[`plot.chaid()`](https://morimotoosamu.github.io/chaidr/reference/plot.chaid.md),
+[`chaid_plotly()`](https://morimotoosamu.github.io/chaidr/reference/chaid_plotly.md)
 
 ## Examples
 

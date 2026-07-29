@@ -1,10 +1,11 @@
 # Control parameters for CHAID tree growing
 
-Collects the algorithm parameters used by [`chaid()`](chaid.md). The
-defaults match the defaults of the IBM SPSS Statistics user interface
-(alpha 0.05, Bonferroni adjustment on, no re-splitting, maximum depth 3,
-minimum parent size 100, minimum child size 50, 10 bins for continuous
-predictors).
+Collects the algorithm parameters used by
+[`chaid()`](https://morimotoosamu.github.io/chaidr/reference/chaid.md).
+The defaults match the defaults of the IBM SPSS Statistics user
+interface (alpha 0.05, Bonferroni adjustment on, no re-splitting,
+maximum depth 3, minimum parent size 100, minimum child size 50, 10 bins
+for continuous predictors).
 
 ## Usage
 
@@ -115,11 +116,12 @@ chaid_control(
 ## Value
 
 An object of class `"chaid_control"`: a list of the validated parameter
-values, to be passed to the `control` argument of [`chaid()`](chaid.md).
+values, to be passed to the `control` argument of
+[`chaid()`](https://morimotoosamu.github.io/chaidr/reference/chaid.md).
 
 ## See also
 
-[`chaid()`](chaid.md)
+[`chaid()`](https://morimotoosamu.github.io/chaidr/reference/chaid.md)
 
 ## Examples
 
@@ -127,11 +129,11 @@ values, to be passed to the `control` argument of [`chaid()`](chaid.md).
 ctl <- chaid_control(max_depth = 2, min_parent = 20, min_child = 5)
 fit <- chaid(Species ~ ., data = iris, control = ctl)
 fit
-#> CHAID 決定木 (method = "chaid")
-#> 目的変数: Species (カテゴリカル) 
-#> 有効ケース数: 150 （データ 150 行） 
+#> CHAID decision tree (method = "chaid")
+#> Response: Species (categorical) 
+#> Valid cases: 150 (data: 150 rows) 
 #> 
-#> [1] root: setosa (33.3%), n=150 | 分割: Petal.Length (adj.p=1.35e-44, chi2=243.8, B=126)
+#> [1] root: setosa (33.3%), n=150 | split: Petal.Length (adj.p=1.35e-44, chi2=243.8, B=126)
 #>   [2] Petal.Length in {<= 1.6}: setosa (100.0%), n=44 *
 #>   [3] Petal.Length in {(1.6, 3.8]}: versicolor (57.1%), n=14 *
 #>   [4] Petal.Length in {(3.8, 4.6]}: versicolor (96.9%), n=32 *

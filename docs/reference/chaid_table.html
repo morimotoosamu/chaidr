@@ -27,9 +27,16 @@ and the index of the mean."></head><body>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/chaidr.html">Get started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/chaidr-ja.html">chaidr detailed tutorial (Japanese)</a></li>
+  </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/morimotoosamu/chaidr/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -39,7 +46,7 @@ and the index of the mean."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Summary table of CHAID terminal nodes</h1>
-
+      <small class="dont-index">Source: <a href="https://github.com/morimotoosamu/chaidr/blob/HEAD/R/11_inspect.R" class="external-link"><code>R/11_inspect.R</code></a></small>
       <div class="d-none name"><code>chaid_table.Rd</code></div>
     </div>
 
@@ -103,11 +110,11 @@ coincide unless case weights are used.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7    7     1  30  20.0  virginica   0.0000       0.0000      1.0000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                         rule</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1                     (root)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2         Petal.Length ≤ 1.6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Petal.Length が (1.6, 3.8]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Petal.Length が (3.8, 4.6]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Petal.Length が (4.6, 4.9]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 Petal.Length が (4.9, 5.3]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        Petal.Length &lt;= 1.6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Petal.Length in (1.6, 3.8]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Petal.Length in (3.8, 4.6]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Petal.Length in (4.6, 4.9]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 Petal.Length in (4.9, 5.3]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7         Petal.Length &gt; 5.3</span>
 <span class="r-in"><span><span class="fu">chaid_table</span><span class="op">(</span><span class="va">fit</span>, target <span class="op">=</span> <span class="st">"virginica"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   node depth   n pct_n prediction p_setosa p_versicolor p_virginica</span>
@@ -120,11 +127,11 @@ coincide unless case weights are used.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7    7     1  30  20.0  virginica   0.0000       0.0000      1.0000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   response_rate index                       rule</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1        0.3333 100.0                     (root)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2        0.0000   0.0         Petal.Length ≤ 1.6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3        0.0000   0.0 Petal.Length が (1.6, 3.8]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4        0.0312   9.4 Petal.Length が (3.8, 4.6]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5        0.3571 107.1 Petal.Length が (4.6, 4.9]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6        0.8750 262.5 Petal.Length が (4.9, 5.3]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        0.0000   0.0        Petal.Length &lt;= 1.6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        0.0000   0.0 Petal.Length in (1.6, 3.8]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        0.0312   9.4 Petal.Length in (3.8, 4.6]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        0.3571 107.1 Petal.Length in (4.6, 4.9]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        0.8750 262.5 Petal.Length in (4.9, 5.3]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7        1.0000 300.0         Petal.Length &gt; 5.3</span>
 </code></pre></div>
     </div>

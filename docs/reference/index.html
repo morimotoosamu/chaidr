@@ -15,9 +15,16 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/chaidr.html">Get started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/chaidr-ja.html">chaidr detailed tutorial (Japanese)</a></li>
+  </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/morimotoosamu/chaidr/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -30,7 +37,7 @@
     </div>
 
     <div class="section level2">
-      <h2 id="model-fitting">Model fitting<a class="anchor" aria-label="anchor" href="#model-fitting"></a></h2>
+      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
 
 
 
@@ -48,102 +55,17 @@
 
         <dt>
 
+          <code><a href="chaid_as_party.html">chaid_as_party()</a></code> <code><a href="chaid_as_party.html">as.party(<i>&lt;chaid&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Convert a CHAID tree to a partykit constparty</dd>
+
+        <dt>
+
           <code><a href="chaid_control.html">chaid_control()</a></code>
 
         </dt>
         <dd>Control parameters for CHAID tree growing</dd>
-      </dl></div><div class="section level2">
-      <h2 id="prediction">Prediction<a class="anchor" aria-label="anchor" href="#prediction"></a></h2>
-
-
-
-      <dl></dl></div><div class="section level2">
-
-
-
-
-      <dl><dt>
-
-          <code><a href="predict.chaid.html">predict(<i>&lt;chaid&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Predict from a fitted CHAID tree</dd>
-      </dl></div><div class="section level2">
-      <h2 id="inspection">Inspection<a class="anchor" aria-label="anchor" href="#inspection"></a></h2>
-
-
-
-      <dl></dl></div><div class="section level2">
-
-
-
-
-      <dl><dt>
-
-          <code><a href="print.chaid.html">print(<i>&lt;chaid&gt;</i>)</a></code> <code><a href="print.chaid.html">summary(<i>&lt;chaid&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Print and summarise a CHAID tree</dd>
-
-        <dt>
-
-          <code><a href="chaid_table.html">chaid_table()</a></code>
-
-        </dt>
-        <dd>Summary table of CHAID terminal nodes</dd>
-
-        <dt>
-
-          <code><a href="chaid_rules.html">chaid_rules()</a></code>
-
-        </dt>
-        <dd>Extract decision rules from a CHAID tree</dd>
-
-        <dt>
-
-          <code><a href="chaid_importance.html">chaid_importance()</a></code>
-
-        </dt>
-        <dd>Heuristic variable importance for a CHAID tree</dd>
-      </dl></div><div class="section level2">
-      <h2 id="evaluation">Evaluation<a class="anchor" aria-label="anchor" href="#evaluation"></a></h2>
-
-
-
-      <dl></dl></div><div class="section level2">
-
-
-
-
-      <dl><dt>
-
-          <code><a href="chaid_gains.html">chaid_gains()</a></code> <code><a href="chaid_gains.html">print(<i>&lt;chaid_gains&gt;</i>)</a></code> <code><a href="chaid_gains.html">plot(<i>&lt;chaid_gains&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Gains and lift table for a CHAID tree</dd>
-
-        <dt>
-
-          <code><a href="chaid_validate.html">chaid_validate()</a></code> <code><a href="chaid_validate.html">print(<i>&lt;chaid_validation&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Evaluate a CHAID tree on holdout data</dd>
-      </dl></div><div class="section level2">
-      <h2 id="visualization">Visualization<a class="anchor" aria-label="anchor" href="#visualization"></a></h2>
-
-
-
-      <dl></dl></div><div class="section level2">
-
-
-
-
-      <dl><dt>
-
-          <code><a href="plot.chaid.html">plot(<i>&lt;chaid&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Plot a CHAID tree with base graphics</dd>
 
         <dt>
 
@@ -154,29 +76,68 @@
 
         <dt>
 
+          <code><a href="chaid_gains.html">chaid_gains()</a></code> <code><a href="chaid_gains.html">print(<i>&lt;chaid_gains&gt;</i>)</a></code> <code><a href="chaid_gains.html">plot(<i>&lt;chaid_gains&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Gains and lift table for a CHAID tree</dd>
+
+        <dt>
+
+          <code><a href="chaid_importance.html">chaid_importance()</a></code>
+
+        </dt>
+        <dd>Heuristic variable importance for a CHAID tree</dd>
+
+        <dt>
+
           <code><a href="chaid_plotly.html">chaid_plotly()</a></code>
 
         </dt>
         <dd>Interactive CHAID tree plot with plotly</dd>
-      </dl></div><div class="section level2">
-      <h2 id="partykit-integration">partykit integration<a class="anchor" aria-label="anchor" href="#partykit-integration"></a></h2>
 
+        <dt>
 
-
-      <dl></dl></div><div class="section level2">
-
-
-
-
-      <dl><dt>
-
-          <code><a href="chaid_as_party.html">chaid_as_party()</a></code> <code><a href="chaid_as_party.html">as.party(<i>&lt;chaid&gt;</i>)</a></code>
+          <code><a href="chaid_rules.html">chaid_rules()</a></code>
 
         </dt>
-        <dd>Convert a CHAID tree to a partykit constparty</dd>
+        <dd>Extract decision rules from a CHAID tree</dd>
+
+        <dt>
+
+          <code><a href="chaid_table.html">chaid_table()</a></code>
+
+        </dt>
+        <dd>Summary table of CHAID terminal nodes</dd>
+
+        <dt>
+
+          <code><a href="chaid_validate.html">chaid_validate()</a></code> <code><a href="chaid_validate.html">print(<i>&lt;chaid_validation&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Evaluate a CHAID tree on holdout data</dd>
+
+        <dt>
+
+          <code><a href="plot.chaid.html">plot(<i>&lt;chaid&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Plot a CHAID tree with base graphics</dd>
+
+        <dt>
+
+          <code><a href="predict.chaid.html">predict(<i>&lt;chaid&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Predict from a fitted CHAID tree</dd>
+
+        <dt>
+
+          <code><a href="print.chaid.html">print(<i>&lt;chaid&gt;</i>)</a></code> <code><a href="print.chaid.html">summary(<i>&lt;chaid&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Print and summarise a CHAID tree</dd>
       </dl></div>
-  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
-    </nav></aside></div>
+  </main></div>
 
 
     <footer><div class="pkgdown-footer-left">

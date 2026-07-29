@@ -24,7 +24,8 @@ as.party(obj, data, weights = NULL, freq = NULL, ...)
 
 - x, obj:
 
-  A fitted `"chaid"` object returned by [`chaid()`](chaid.md).
+  A fitted `"chaid"` object returned by
+  [`chaid()`](https://morimotoosamu.github.io/chaidr/reference/chaid.md).
 
 - data:
 
@@ -48,13 +49,15 @@ A `partykit::constparty` object.
 
 The returned object is intended for visualisation and structural
 inspection. For predictions on new data use
-[`predict.chaid()`](predict.chaid.md); the
-[`predict()`](https://rdrr.io/r/stats/predict.html) method of the party
-object expects the converted data representation, not the original one.
+[`predict.chaid()`](https://morimotoosamu.github.io/chaidr/reference/predict.chaid.md);
+the [`predict()`](https://rdrr.io/r/stats/predict.html) method of the
+party object expects the converted data representation, not the original
+one.
 
 ## See also
 
-[`chaid()`](chaid.md), [`predict.chaid()`](predict.chaid.md)
+[`chaid()`](https://morimotoosamu.github.io/chaidr/reference/chaid.md),
+[`predict.chaid()`](https://morimotoosamu.github.io/chaidr/reference/predict.chaid.md)
 
 ## Examples
 

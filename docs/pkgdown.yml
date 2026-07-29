@@ -1,5 +1,10 @@
 pandoc: 3.8.3
 pkgdown: 2.2.1
 pkgdown_sha: ~
-articles: {}
-last_built: 2026-07-29T03:39Z
+articles:
+  chaidr-ja: chaidr-ja.html
+  chaidr: chaidr.html
+last_built: 2026-07-29T07:07Z
+urls:
+  reference: https://morimotoosamu.github.io/chaidr/reference
+  article: https://morimotoosamu.github.io/chaidr/articles
