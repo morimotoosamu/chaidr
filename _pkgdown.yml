@@ -2,3 +2,30 @@ url: https://morimotoosamu.github.io/chaidr/
 template:
   bootstrap: 5
 
+reference:
+- title: Model fitting
+  contents:
+  - chaid
+  - chaid_control
+- title: Prediction and methods
+  contents:
+  - predict.chaid
+  - print.chaid
+- title: Tree inspection
+  contents:
+  - chaid_rules
+  - chaid_table
+  - chaid_importance
+- title: Evaluation
+  contents:
+  - chaid_gains
+  - chaid_validate
+- title: Visualization
+  contents:
+  - plot.chaid
+  - chaid_dot
+  - chaid_plotly
+- title: Interoperability
+  contents:
+  - chaid_as_party
+

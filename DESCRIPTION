@@ -17,6 +17,7 @@ Description: An implementation in base 'R' of the CHAID (Chi-squared
     'plotly', and conversion to 'partykit' objects.
 License: MIT + file LICENSE
 Encoding: UTF-8
+Language: en-GB
 Roxygen: list(markdown = TRUE)
 Depends:
     R (>= 4.5)
@@ -35,6 +36,7 @@ Suggests:
     plotly,
     rmarkdown,
     rpart,
+    spelling,
     testthat (>= 3.2.0),
     withr
 VignetteBuilder: knitr
