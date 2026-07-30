@@ -1,6 +1,6 @@
 <!-- 本ファイルは README.md（英語版）の日本語訳。内容を変更する場合は README.Rmd を編集して knit した後、本ファイルにも反映すること -->
 
-# chaidr
+# chaidr <img src="man/figures/logo.png" align="right" height="139" alt="chaidr hex sticker" />
 
 <!-- badges: start -->
 
