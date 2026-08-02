@@ -6,10 +6,18 @@
 # 第2種スターリング数 S(n, k)。
 # 交代和（IBM文書の閉形式）は大きな n で桁落ちするため漸化式
 # S(n,k) = k*S(n-1,k) + S(n-1,k-1) で計算する。
+# 木構築中はノード×名義予測変数ごとに同じ (n, k) で繰り返し呼ばれるため、
+# 計算済みの値をパッケージローカル環境にキャッシュする（n, k は元カテゴリ数
+# 以下の小さい整数なのでキーは高々数十個）。
+.stirling2_cache <- new.env(parent = emptyenv())
+
 stirling2 <- function(n, k) {
   if (k < 0 || k > n) return(0)
   if (n == 0) return(as.numeric(k == 0))
   if (k == 0) return(0)
+  key <- paste(n, k)
+  hit <- .stirling2_cache[[key]]
+  if (!is.null(hit)) return(hit)
   S <- matrix(0, nrow = n + 1, ncol = k + 1)  # S[i+1, j+1] = S(i, j)
   S[1, 1] <- 1
   for (nn in seq_len(n)) {
@@ -17,7 +25,9 @@ stirling2 <- function(n, k) {
       S[nn + 1, kk + 1] <- kk * S[nn, kk + 1] + S[nn, kk]
     }
   }
-  S[n + 1, k + 1]
+  val <- S[n + 1, k + 1]
+  .stirling2_cache[[key]] <- val
+  val
 }
 
 # 補正乗数 B。

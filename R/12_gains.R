@@ -58,8 +58,10 @@ chaid_gains <- function(fit, data = NULL, target = NULL,
     if (!target %in% lv) stop("chaid_gains: target is not a response level: ", target)
   }
 
-  term_ids <- vapply(Filter(function(nd) is.null(nd$split), fit$nodes),
-                     function(nd) nd$id, integer(1))
+  # 「ノードリストの位置 == id」の不変条件（ARCHITECTURE.md）により
+  # id の取り出しは末端判定の 1 パスで済む
+  term_ids <- which(vapply(fit$nodes, function(nd) is.null(nd$split),
+                           logical(1)))
 
   if (is.null(data)) {
     # 学習時のノード統計から集計（dist は w×f 加重）
@@ -77,11 +79,20 @@ chaid_gains <- function(fit, data = NULL, target = NULL,
     y <- y[keep]
     wf <- (w * f)[keep]
     nid <- predict(fit, data[keep, , drop = FALSE], type = "node")
-    n_eff <- vapply(term_ids, function(i) sum(wf[nid == i]), numeric(1))
-    resp <- vapply(term_ids, function(i) {
-      sel <- nid == i
-      if (is_cat) sum(wf[sel & y == target]) else sum(wf[sel] * y[sel])
-    }, numeric(1))
+    # 末端ノードごとの nid == i 全走査（2 × 末端数 × O(n)）を避け、
+    # rowsum の 1 パスで集計する。rowsum はデータ出現順に群別加算するため
+    # sum(wf[sel]) と同一の加算順（= 同一値）。指標 0 の項の加算は値を
+    # 変えないため sum(wf[sel & y == target]) とも一致する。
+    nid_f <- factor(nid, levels = term_ids)
+    fill_by_term <- function(agg) {
+      # rowsum は空グループの行を返さないので term_ids に合わせて 0 埋め
+      out <- numeric(length(term_ids))
+      out[match(rownames(agg), as.character(term_ids))] <- agg[, 1L]
+      out
+    }
+    n_eff <- fill_by_term(rowsum(wf, nid_f))
+    resp <- fill_by_term(rowsum(if (is_cat) wf * (y == target) else wf * y,
+                                nid_f))
   }
 
   present <- n_eff > 0

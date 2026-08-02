@@ -16,6 +16,60 @@ pair_pvalue <- function(groups, i, j, ss, control) {
   suffstat_pvalue(ss, groups[c(i, j)], control)$p
 }
 
+# --- グループ別畳み込み行キャッシュ ---
+# 結合ループでは groups の大半が不変なのに、ペア/全表評価のたびに
+# suffstat_collapse で全グループを畳み込み直すのが無駄になる。
+# そこで suffstat_collapse の結果（グループ別の畳み込み行）をループ内で保持し、
+# 統合で変わったグループの行だけを作り直す。行の値は毎回の全畳み込みと
+# 同じ「ソート済みグループへの colSums」なので、結果はビット単位で一致する。
+
+# グループ i, j を統合（i の新メンバ集合 = merged、j を削除）したときの更新。
+# 統合行は加算の増分更新ではなく colSums で作り直す（加算順序を
+# suffstat_collapse と揃えて完全一致を保つため）。
+collapse_cache_merge <- function(cl, ss, i, j, merged) {
+  upd <- function(m, full) {
+    m[i, ] <- colSums(full[merged, , drop = FALSE])
+    m[-j, , drop = FALSE]
+  }
+  if (ss$ytype == "numeric") {
+    list(st = upd(cl$st, ss$st))
+  } else {
+    list(nij = upd(cl$nij, ss$nij), wij = upd(cl$wij, ss$wij))
+  }
+}
+
+# resplit でグループ gi を g1 / g2（末尾追加）に差し替えたときの更新
+collapse_cache_resplit <- function(cl, ss, gi, g1, g2) {
+  upd <- function(m, full) {
+    m[gi, ] <- colSums(full[g1, , drop = FALSE])
+    rbind(m, colSums(full[g2, , drop = FALSE]))
+  }
+  if (ss$ytype == "numeric") {
+    list(st = upd(cl$st, ss$st))
+  } else {
+    list(nij = upd(cl$nij, ss$nij), wij = upd(cl$wij, ss$wij))
+  }
+}
+
+# キャッシュからグループ添字 ii の行だけを取り出した畳み込み表
+collapse_cache_pick <- function(cl, ii) {
+  if (!is.null(cl$st)) {
+    list(st = cl$st[ii, , drop = FALSE])
+  } else {
+    list(nij = cl$nij[ii, , drop = FALSE], wij = cl$wij[ii, , drop = FALSE])
+  }
+}
+
+# キャッシュ経由のペア p 値 / 全表検定（suffstat_pvalue の畳み込み省略版）
+pair_pvalue_cl <- function(cl, i, j, ss, control) {
+  suffstat_pvalue_tab(collapse_cache_pick(cl, c(i, j)), ss$ytype,
+                      ss$unweighted, control)$p
+}
+
+config_pvalue_cl <- function(cl, ss, control) {
+  suffstat_pvalue_tab(cl, ss$ytype, ss$unweighted, control)
+}
+
 # 現在のグループ構成に対する全表の検定（グループ外コードのケースは除外 =
 # 表に行として現れないだけで同じこと）
 config_pvalue <- function(groups, ss, control) {
@@ -25,11 +79,12 @@ config_pvalue <- function(groups, ss, control) {
 # ペア p 値キャッシュの遅延充填。pairs（allowable_pairs の返り値）の各行に
 # ついて、キャッシュ pvmat に無い値だけ計算して埋め、pairs 順の p 値ベクトル
 # を返す。pvmat は上三角（i < j）で保持する。
-fill_pair_cache <- function(pvmat, pairs, groups, ss, control) {
+# cl は畳み込み行キャッシュ（ペア評価は該当 2 行を取り出すだけ）。
+fill_pair_cache <- function(pvmat, pairs, cl, ss, control) {
   a <- pmin(pairs[, 1], pairs[, 2])
   b <- pmax(pairs[, 1], pairs[, 2])
   for (r in which(is.na(pvmat[cbind(a, b)]))) {
-    pvmat[a[r], b[r]] <- pair_pvalue(groups, a[r], b[r], ss, control)
+    pvmat[a[r], b[r]] <- pair_pvalue_cl(cl, a[r], b[r], ss, control)
   }
   list(pvmat = pvmat, pv = pvmat[cbind(a, b)])
 }
@@ -78,6 +133,7 @@ best_binary_split <- function(cats, ss, ptype, control) {
 merge_core_standard <- function(cats, ss, ptype, control) {
   groups <- as.list(sort(cats))
   if (length(groups) <= 2) return(groups)
+  cl <- suffstat_collapse(ss, groups)  # グループ別畳み込み行キャッシュ
   pvmat <- matrix(NA_real_, length(groups), length(groups))
   guard <- 0L
   repeat {
@@ -93,7 +149,7 @@ merge_core_standard <- function(cats, ss, ptype, control) {
       break
     }
     pairs <- allowable_pairs(groups, ptype)
-    fc <- fill_pair_cache(pvmat, pairs, groups, ss, control)
+    fc <- fill_pair_cache(pvmat, pairs, cl, ss, control)
     pvmat <- fc$pvmat
     pv <- fc$pv
     b <- which.max(pv)
@@ -103,6 +159,7 @@ merge_core_standard <- function(cats, ss, ptype, control) {
     merged <- sort(c(groups[[i]], groups[[j]]))
     groups[[i]] <- merged
     groups <- groups[-j]
+    cl <- collapse_cache_merge(cl, ss, i, j, merged)
     pvmat <- drop_merge_cache(pvmat, i, j)
     # resplit（公式ステップ5、SPSS UI 既定はオフ）:
     # 3 個以上の元カテゴリからなる複合カテゴリの最良 2 分割が
@@ -113,6 +170,7 @@ merge_core_standard <- function(cats, ss, ptype, control) {
         gi <- which(vapply(groups, function(g) identical(g, merged), logical(1)))
         groups[[gi]] <- sp$g1
         groups <- c(groups, list(sp$g2))
+        cl <- collapse_cache_resplit(cl, ss, gi, sp$g1, sp$g2)
         # 分割で構成が変わった gi と末尾の新グループのキャッシュを無効化
         pvmat <- rbind(cbind(pvmat, NA_real_), NA_real_)
         pvmat[gi, ] <- NA_real_
@@ -129,20 +187,23 @@ merge_core_standard <- function(cats, ss, ptype, control) {
 merge_core_exhaustive <- function(cats, ss, ptype, control) {
   groups <- as.list(sort(cats))
   best_groups <- groups
-  best_p <- config_pvalue(groups, ss, control)$p
+  cl <- suffstat_collapse(ss, groups)  # グループ別畳み込み行キャッシュ
+  best_p <- config_pvalue_cl(cl, ss, control)$p
   pvmat <- matrix(NA_real_, length(groups), length(groups))
   while (length(groups) > 2) {
     pairs <- allowable_pairs(groups, ptype)
-    fc <- fill_pair_cache(pvmat, pairs, groups, ss, control)
+    fc <- fill_pair_cache(pvmat, pairs, cl, ss, control)
     pvmat <- fc$pvmat
     pv <- fc$pv
     b <- which.max(pv)
     i <- pairs[b, 1]
     j <- pairs[b, 2]
-    groups[[i]] <- sort(c(groups[[i]], groups[[j]]))
+    merged <- sort(c(groups[[i]], groups[[j]]))
+    groups[[i]] <- merged
     groups <- groups[-j]
+    cl <- collapse_cache_merge(cl, ss, i, j, merged)
     pvmat <- drop_merge_cache(pvmat, i, j)
-    p_now <- config_pvalue(groups, ss, control)$p
+    p_now <- config_pvalue_cl(cl, ss, control)$p
     if (p_now < best_p) {
       best_p <- p_now
       best_groups <- groups
@@ -164,6 +225,7 @@ find_float_group <- function(groups, float_code) {
 # 統合の許容範囲は結合時と同じ（順序型=隣接、名義型=全ペア、浮動=任意）。
 absorb_small_groups <- function(groups, ss, ptype, control,
                                 min_size, float_code = NA_integer_) {
+  cl <- NULL  # 統合が必要になった時点で初めて畳み込みキャッシュを構築
   repeat {
     if (length(groups) <= 1) break
     nf_g <- vapply(groups, function(g) sum(ss$fcat[g]), numeric(1))
@@ -178,14 +240,17 @@ absorb_small_groups <- function(groups, ss, ptype, control,
     pairs <- allowable_pairs(groups, ptype, float_group)
     pairs <- pairs[pairs[, 1] == s | pairs[, 2] == s, , drop = FALSE]
     if (nrow(pairs) == 0) break
+    if (is.null(cl)) cl <- suffstat_collapse(ss, groups)
     pv <- vapply(seq_len(nrow(pairs)), function(r) {
-      pair_pvalue(groups, pairs[r, 1], pairs[r, 2], ss, control)
+      pair_pvalue_cl(cl, pairs[r, 1], pairs[r, 2], ss, control)
     }, numeric(1))
     b <- which.max(pv)
     i <- pairs[b, 1]
     j <- pairs[b, 2]
-    groups[[i]] <- sort(c(groups[[i]], groups[[j]]))
+    merged <- sort(c(groups[[i]], groups[[j]]))
+    groups[[i]] <- merged
     groups <- groups[-j]
+    cl <- collapse_cache_merge(cl, ss, i, j, merged)
   }
   groups
 }

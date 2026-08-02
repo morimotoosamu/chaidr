@@ -35,6 +35,7 @@ expected_freq <- function(nij, wij, eps = 1e-3, max_iter = 100L, unweighted = NA
   }
   wbar <- cell_mean_weight(nij, wij)
   inv <- 1 / wbar
+  tinv <- t(inv)  # 反復内の転置＋割当を避けるためループ外で 1 回だけ
   alpha <- rep(1, nrow(nij))
   beta <- rep(1, ncol(nij))
   m <- inv * outer(alpha, beta)
@@ -42,7 +43,7 @@ expected_freq <- function(nij, wij, eps = 1e-3, max_iter = 100L, unweighted = NA
   for (it in seq_len(max_iter)) {
     m_old <- m
     alpha <- ni / as.numeric(inv %*% beta)
-    beta <- nj / as.numeric(t(inv) %*% alpha)
+    beta <- nj / as.numeric(tinv %*% alpha)
     m <- inv * outer(alpha, beta)
     if (max(abs(m - m_old)) < eps) {
       converged <- TRUE
@@ -167,18 +168,23 @@ roweffects_expected <- function(nij, wbar, z, eps = 1e-3, max_iter = 100L) {
   la <- numeric(I)                 # log α
   lb <- numeric(ncol(nij))         # log β
   lg <- numeric(I)                 # log γ
+  zsq <- z^2
   logm <- lw
   for (k in seq_len(max_iter)) {
     m_old <- exp(logm)
     la <- la + log(ni) - log(rowSums(m_old))
-    lb <- log(nj) - log(colSums(exp(lw + la + outer(lg, z))))
-    mstar <- exp(lw + outer(la, lb, "+") + outer(lg, z))
+    # outer の重複計算を排除: og は lg 更新前の 2 箇所で、oab は la/lb 確定後の
+    # 2 箇所で共通。lg はステップ5で更新されるため logm 側の γ 項のみ再計算する
+    og <- outer(lg, z)
+    lb <- log(nj) - log(colSums(exp(lw + la + og)))
+    oab <- outer(la, lb, "+")
+    mstar <- exp(lw + oab + og)
     num <- as.numeric((nij - mstar) %*% z)
-    den <- as.numeric(mstar %*% (z^2))
+    den <- as.numeric(mstar %*% zsq)
     gi <- 1 + num / den
     upd <- is.finite(gi) & gi > 0
     lg[upd] <- lg[upd] + log(gi[upd])
-    logm <- lw + outer(la, lb, "+") + outer(lg, z)
+    logm <- lw + oab + outer(lg, z)
     m_new <- exp(logm)
     if (max(abs(m_new - m_old)) < eps) return(m_new)
   }
@@ -225,20 +231,26 @@ pval_roweffects <- function(g, y, w, f, scores = NULL,
   pval_roweffects_tab(tab$n, tab$w, sj_all, eps, max_iter)
 }
 
-# 十分統計量表（suffstat_build）に対する検定のディスパッチ。
-# groups の行を畳み込み、目的変数の型に応じた表ベースコアを呼ぶ。
-# 結合フェーズのペア p 値・全表 p 値はすべてここを通る。
-suffstat_pvalue <- function(ss, groups, control) {
-  cl <- suffstat_collapse(ss, groups)
-  if (ss$ytype == "factor") {
+# 畳み込み済みの表（suffstat_collapse の返り値と同形式）に対する検定の
+# ディスパッチ。結合ループが保持するグループ別畳み込み行キャッシュから
+# 直接呼べるよう、畳み込みと検定を分離している。
+suffstat_pvalue_tab <- function(cl, ytype, unweighted, control) {
+  if (ytype == "factor") {
     pval_chisq_tab(cl$nij, cl$wij, control$stat, control$epsilon,
-                   control$max_iter, ss$unweighted)
-  } else if (ss$ytype == "ordinal") {
+                   control$max_iter, unweighted)
+  } else if (ytype == "ordinal") {
     pval_roweffects_tab(cl$nij, cl$wij, control$y_scores, control$epsilon,
-                        control$max_iter, ss$unweighted)
+                        control$max_iter, unweighted)
   } else {
     pval_ftest_tab(cl$st)
   }
+}
+
+# 十分統計量表（suffstat_build）に対する検定のディスパッチ。
+# groups の行を畳み込み、目的変数の型に応じた表ベースコアを呼ぶ。
+suffstat_pvalue <- function(ss, groups, control) {
+  suffstat_pvalue_tab(suffstat_collapse(ss, groups), ss$ytype,
+                      ss$unweighted, control)
 }
 
 # 目的変数の型に応じた検定のディスパッチ（生データ版・互換用）。

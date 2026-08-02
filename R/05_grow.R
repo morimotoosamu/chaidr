@@ -89,21 +89,24 @@ grow_node <- function(state, idx, depth, parent) {
     # 構成する — 実在カテゴリ < 2 の変数は仮説自体が存在しないため除外。
     best <- NULL
     best_var <- NA_integer_
-    p_ids <- integer(0)
-    p_vec <- numeric(0)
+    # c() による逐次成長を避け、予測変数数で事前確保してから絞り込む
+    p_ok <- logical(length(state$preds))
+    p_all <- numeric(length(state$preds))
     for (pi in seq_along(state$preds)) {
       p <- state$preds[[pi]]
       res <- merge_predictor(p$code[idx], y, w_idx, f_idx,
                              p$ptype, p$float_code, state$method,
                              state$ytype, ctl)
       if (is.null(res)) next
-      p_ids <- c(p_ids, pi)
-      p_vec <- c(p_vec, res$p_adj)
+      p_ok[pi] <- TRUE
+      p_all[pi] <- res$p_adj
       if (is.null(best) || better_split(res, best)) {
         best <- res
         best_var <- pi
       }
     }
+    p_ids <- which(p_ok)
+    p_vec <- p_all[p_ok]
     # 予測変数間の多重比較補正（adjust_across）。変数選択は補正前の p_adj
     # で行い（p.adjust の全手法は単調なので argmin は不変）、alpha_split
     # との比較のみ補正後の p_final で行う。

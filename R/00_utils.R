@@ -4,8 +4,10 @@
 # groups（元カテゴリコードの整数ベクトルのリスト）に基づき、各ケースの
 # グループ番号を返す。どのグループにも属さないコードは NA。
 assign_groups <- function(xcode, groups) {
-  m <- max(xcode, unlist(groups))
-  gmap <- rep(NA_integer_, m)
+  # groups は xcode に実在するカテゴリの分割（merge_predictor 由来）なので
+  # max(xcode) で十分。仮に範囲外コードを含んでも代入時に gmap が自動拡張
+  # されるだけで、gmap[xcode] の参照範囲には影響しない。
+  gmap <- rep(NA_integer_, max(xcode))
   for (gi in seq_along(groups)) gmap[groups[[gi]]] <- gi
   gmap[xcode]
 }

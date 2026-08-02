@@ -61,40 +61,60 @@ chaid_validate <- function(fit, newdata, weights = NULL, freq = NULL) {
   w_root <- fit$nodes[[1]]$W
   w_test <- sum(wf)
 
-  rows <- lapply(term, function(nd) {
-    sel <- nid == nd$id
-    test_n <- sum(wf[sel])
-    train_share <- nd$W / w_root
-    if (is_cat) {
-      pred <- as.character(nd$prediction)
-      train_rate <- unname(nd$dist[pred]) / sum(nd$dist)
-      test_rate <- if (test_n > 0) sum(wf[sel & y == pred]) / test_n else NA_real_
-    } else {
-      pred <- NA_character_
-      train_rate <- unname(nd$dist["mean"])
-      test_rate <- if (test_n > 0) sum(wf[sel] * y[sel]) / test_n else NA_real_
-    }
-    data.frame(node = nd$id,
-               prediction = pred,
-               train_pct_n = round(100 * train_share, 2),
-               test_pct_n = round(100 * test_n / w_test, 2),
-               train_rate = round(train_rate, 4),
-               test_rate = round(test_rate, 4),
-               diff_rate = round(test_rate - train_rate, 4),
-               stringsAsFactors = FALSE)
-  })
-  nodes_df <- do.call(rbind, rows)
+  # 末端ノードごとの nid == id 全走査（末端数 × O(n)）を避け、rowsum の
+  # 1 パスで集計する。rowsum はデータ出現順に群別加算するため
+  # sum(wf[sel]) と同一の加算順（= 同一値）になる。
+  term_ids <- vapply(term, function(nd) nd$id, integer(1))
+  nid_f <- factor(nid, levels = term_ids)
+  # rowsum は空グループの行を返さないので term_ids に合わせて 0 埋めする
+  fill_by_term <- function(agg) {
+    out <- numeric(length(term_ids))
+    out[match(rownames(agg), as.character(term_ids))] <- agg[, 1L]
+    out
+  }
+  test_n <- fill_by_term(rowsum(wf, nid_f))
+
+  if (is_cat) {
+    # 行ごとのリスト索引（vapply(nid, ...)）を避け、ノード別テーブルを
+    # 1 回作って参照する
+    pred_at_node <- vapply(fit$nodes, function(nd) as.character(nd$prediction),
+                           character(1))
+    # 各ケースが「所属末端ノードの予測クラス」に一致した重みの群別和。
+    # 指標 0 の項の加算は値を変えないため sum(wf[sel & y == pred]) と一致する
+    hit <- wf * (pred_at_node[nid] == as.character(y))
+    resp_sum <- fill_by_term(rowsum(hit, nid_f))
+    pred_term <- pred_at_node[term_ids]
+    train_rate <- vapply(term, function(nd) {
+      unname(nd$dist[as.character(nd$prediction)]) / sum(nd$dist)
+    }, numeric(1))
+  } else {
+    resp_sum <- fill_by_term(rowsum(wf * y, nid_f))
+    pred_term <- rep(NA_character_, length(term_ids))
+    train_rate <- vapply(term, function(nd) unname(nd$dist["mean"]), numeric(1))
+  }
+  test_rate <- resp_sum / test_n
+  test_rate[test_n <= 0] <- NA_real_
+
+  w_term <- vapply(term, function(nd) nd$W, numeric(1))
+  nodes_df <- data.frame(node = term_ids,
+                         prediction = pred_term,
+                         train_pct_n = round(100 * w_term / w_root, 2),
+                         test_pct_n = round(100 * test_n / w_test, 2),
+                         train_rate = round(train_rate, 4),
+                         test_rate = round(test_rate, 4),
+                         diff_rate = round(test_rate - train_rate, 4),
+                         stringsAsFactors = FALSE)
   if (!is_cat) nodes_df$prediction <- NULL
 
   overall <- if (is_cat) {
     # pred_class は character、y は factor / ordered factor。ordered でも
     # as.character(y) は水準名を返すので順序情報を捨てて等値比較できる。
-    pred_class <- vapply(nid, function(i) as.character(fit$nodes[[i]]$prediction),
-                         character(1))
+    pred_class <- pred_at_node[nid]
     list(accuracy = sum(wf[pred_class == as.character(y)]) / w_test)
   } else {
-    pred_mean <- vapply(nid, function(i) unname(fit$nodes[[i]]$dist["mean"]),
-                        numeric(1))
+    means_by_node <- vapply(fit$nodes, function(nd) unname(nd$dist["mean"]),
+                            numeric(1))
+    pred_mean <- means_by_node[nid]
     mse <- sum(wf * (y - pred_mean)^2) / w_test
     ybar <- sum(wf * y) / w_test
     list(rmse = sqrt(mse),

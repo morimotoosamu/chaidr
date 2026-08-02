@@ -86,12 +86,16 @@ predict.chaid <- function(object, newdata,
   n <- nrow(newdata)
   nodes <- object$nodes
 
+  # 未知水準の検出は recode_newdata の結果を再利用する
+  # （code が NA になるのは「未知水準」か「NA カテゴリ未学習の欠損」のみで、
+  #   後者は !is.na(x) で除外される）
   unknown_seen <- FALSE
-  for (p in object$predictors) {
+  for (pi in seq_along(object$predictors)) {
+    p <- object$predictors[[pi]]
     if (is.null(p$breaks)) {
-      x <- newdata[[p$name]]
-      lv <- setdiff(p$levels, "<NA>")
-      if (any(!is.na(x) & !(as.character(x) %in% lv))) unknown_seen <- TRUE
+      if (any(is.na(codes[[pi]]) & !is.na(newdata[[p$name]]))) {
+        unknown_seen <- TRUE
+      }
     }
   }
   if (unknown_seen) {
@@ -99,38 +103,45 @@ predict.chaid <- function(object, newdata,
             "assigning those cases to the child with the largest node size")
   }
 
+  # nodes は grow_node の深さ優先前順（親が必ず子より前）なので 1 パスで
+  # 全行をルーティングできる。ノード id ごとの行番号バケットを持たせて
+  # cur の全走査（which(cur == id)）を排除する。
   cur <- rep(1L, n)
-  repeat {
-    moved <- FALSE
-    for (nd in nodes) {
-      if (is.null(nd$split)) next
-      rows <- which(cur == nd$id)
-      if (!length(rows)) next
-      p <- object$predictors[[nd$split$var_index]]
-      cur[rows] <- route_children(nd, codes[[nd$split$var_index]][rows],
-                                  ordinal = (p$ptype == "ordinal"), nodes)
-      moved <- TRUE
+  bucket <- vector("list", length(nodes))
+  bucket[[1L]] <- seq_len(n)
+  for (nd in nodes) {
+    rows <- bucket[[nd$id]]
+    if (is.null(nd$split) || !length(rows)) next
+    p <- object$predictors[[nd$split$var_index]]
+    child <- route_children(nd, codes[[nd$split$var_index]][rows],
+                            ordinal = (p$ptype == "ordinal"), nodes)
+    cur[rows] <- child
+    for (cid in nd$split$children) {
+      bucket[[cid]] <- rows[child == cid]
     }
-    if (!moved) break
+    bucket[nd$id] <- list(NULL)  # 配分済みバケットを解放
   }
 
   if (type == "node") return(cur)
   if (type == "response") {
+    # 行ごとのリスト索引を避け、ノード別テーブルを 1 回作って参照する
     if (object$response$type != "numeric") {
-      preds <- vapply(cur, function(id) nodes[[id]]$prediction, character(1))
-      return(factor(preds, levels = object$response$levels,
+      preds_by_node <- vapply(nodes, function(nd) nd$prediction, character(1))
+      return(factor(preds_by_node[cur], levels = object$response$levels,
                     ordered = (object$response$type == "ordinal")))
     }
-    return(vapply(cur, function(id) nodes[[id]]$prediction, numeric(1)))
+    means_by_node <- vapply(nodes, function(nd) nd$prediction, numeric(1))
+    return(means_by_node[cur])
   }
   # type == "prob"（カテゴリカル・順序目的変数のみ）
   if (object$response$type == "numeric") {
     stop("predict.chaid: type='prob' is only for categorical responses")
   }
-  probs <- t(vapply(cur, function(id) {
-    d <- nodes[[id]]$dist
+  probs_by_node <- t(vapply(nodes, function(nd) {
+    d <- nd$dist
     d / sum(d)
   }, numeric(length(object$response$levels))))
+  probs <- probs_by_node[cur, , drop = FALSE]
   colnames(probs) <- object$response$levels
   probs
 }
