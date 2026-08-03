@@ -14,6 +14,16 @@ and lift analysis, validation on holdout data, and visualization via
 base graphics, 'Graphviz' DOT, 'plotly', and conversion to 'partykit'
 objects.
 
+## See also
+
+Useful links:
+
+- <https://github.com/morimotoosamu/chaidr>
+
+- <https://morimotoosamu.github.io/chaidr/>
+
+- Report bugs at <https://github.com/morimotoosamu/chaidr/issues>
+
 ## Author
 
 **Maintainer**: Osamu Morimoto <galactic.supermarket@gmail.com>
