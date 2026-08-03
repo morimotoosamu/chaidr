@@ -12,6 +12,6 @@
 ^\.claude$
 ^README\.Rmd$
 ^README\.ja\.md$
-^DESCRIPTION\.bak$
+\.bak$
 ^cran-comments\.md$
 ^\.github$

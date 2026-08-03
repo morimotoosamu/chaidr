@@ -6,7 +6,18 @@
 \alias{chaidr-package}
 \title{chaidr: CHAID and Exhaustive CHAID Decision Trees}
 \description{
+\if{html}{\figure{logo.svg}{options: style='float: right' alt='logo' width='120'}}
+
 An implementation in base 'R' of the CHAID (Chi-squared Automatic Interaction Detection) decision tree algorithm of Kass (1980) \doi{10.2307/2986296} and the Exhaustive CHAID variant of Biggs, de Ville, and Suen (1991) \doi{10.1080/02664769100000005}, as specified in the 'IBM SPSS' Statistics Algorithms documentation. Supports nominal, ordinal (with floating missing category), and continuous predictors, and nominal, ordinal, and continuous response variables using Pearson chi-squared, Goodman row-effects, and one-way ANOVA F tests respectively. Includes prediction, rule extraction, gains and lift analysis, validation on holdout data, and visualization via base graphics, 'Graphviz' DOT, 'plotly', and conversion to 'partykit' objects.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/morimotoosamu/chaidr}
+  \item \url{https://morimotoosamu.github.io/chaidr/}
+  \item Report bugs at \url{https://github.com/morimotoosamu/chaidr/issues}
+}
+
 }
 \author{
 \strong{Maintainer}: Osamu Morimoto \email{galactic.supermarket@gmail.com} [copyright holder]
