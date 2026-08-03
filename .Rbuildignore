@@ -3,6 +3,7 @@
 ^\.Rhistory$
 ^LICENSE\.md$
 ^ARCHITECTURE\.md$
+^CLAUDE\.md$
 ^TUTORIAL\.
 ^demo\.R$
 ^data-raw$
