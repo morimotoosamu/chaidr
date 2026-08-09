@@ -1,5 +1,10 @@
 # Changelog
 
+## chaidr (development version)
+
+- Reworded the Description field to drop the redundant “in base ‘R’”
+  opening, as requested by the CRAN reviewer.
+
 ## chaidr 0.1.0
 
 CRAN release: 2026-08-08

@@ -1,5 +1,9 @@
 # chaidr
 
+[![CRAN
+status](https://www.r-pkg.org/badges/version/chaidr)](https://CRAN.R-project.org/package=chaidr)
+[![R-CMD-check](https://github.com/morimotoosamu/chaidr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/morimotoosamu/chaidr/actions/workflows/R-CMD-check.yaml)
+
 chaidr は、CHAID（Chi-squared Automatic Interaction Detection）および
 Exhaustive CHAID 決定木アルゴリズムの base R 実装です。IBM SPSS
 Statistics Algorithms ドキュメントの仕様（Kass 1980; Biggs, de Ville,
