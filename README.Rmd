@@ -19,6 +19,8 @@ knitr::opts_chunk$set(
 # chaidr <img src="man/figures/logo.png" align="right" height="139" alt="chaidr hex sticker" />
 
 <!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/chaidr)](https://CRAN.R-project.org/package=chaidr)
+[![R-CMD-check](https://github.com/morimotoosamu/chaidr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/morimotoosamu/chaidr/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 chaidr is a base R implementation of the CHAID (Chi-squared Automatic

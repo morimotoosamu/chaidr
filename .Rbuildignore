@@ -4,8 +4,7 @@
 ^LICENSE\.md$
 ^ARCHITECTURE\.md$
 ^CLAUDE\.md$
-^TUTORIAL\.
-^demo\.R$
+^dev$
 ^data-raw$
 ^_pkgdown\.yml$
 ^docs$

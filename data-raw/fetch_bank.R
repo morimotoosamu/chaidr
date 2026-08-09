@@ -6,7 +6,7 @@
 # 注意: ucimlrepo パッケージの fetch_ucirepo(id = 222) は**旧版**
 # bank-full.csv（45,211行 × 17列、マクロ経済変数なし）を返すため、
 # 本節が使う bank-additional-full.csv（41,188行 × 21列）は取得できない。
-# 詳細は TUTORIAL.md §5.10 の注記を参照。
+# 詳細は dev/TUTORIAL.Rmd §5.10 の注記を参照。
 
 BANK_URL <- "https://archive.ics.uci.edu/static/public/222/bank+marketing.zip"
 BANK_CSV <- "bank-additional-full.csv"

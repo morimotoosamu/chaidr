@@ -5,6 +5,9 @@
 
 <!-- badges: start -->
 
+[![CRAN
+status](https://www.r-pkg.org/badges/version/chaidr)](https://CRAN.R-project.org/package=chaidr)
+[![R-CMD-check](https://github.com/morimotoosamu/chaidr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/morimotoosamu/chaidr/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 chaidr is a base R implementation of the CHAID (Chi-squared Automatic
