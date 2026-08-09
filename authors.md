@@ -10,13 +10,14 @@ Source:
 [`inst/CITATION`](https://github.com/morimotoosamu/chaidr/blob/master/inst/CITATION)
 
 Morimoto O (2026). *chaidr: CHAID and Exhaustive CHAID Decision Trees*.
-R package version 0.1.0, <https://CRAN.R-project.org/package=chaidr>.
+R package version 0.1.0.9000,
+<https://CRAN.R-project.org/package=chaidr>.
 
     @Manual{,
       title = {{chaidr}: CHAID and Exhaustive CHAID Decision Trees},
       author = {Osamu Morimoto},
       year = {2026},
-      note = {R package version 0.1.0},
+      note = {R package version 0.1.0.9000},
       url = {https://CRAN.R-project.org/package=chaidr},
     }
 
