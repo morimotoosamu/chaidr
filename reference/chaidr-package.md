@@ -1,7 +1,7 @@
 # chaidr: CHAID and Exhaustive CHAID Decision Trees
 
-An implementation of the CHAID (Chi-squared Automatic Interaction
-Detection) decision tree algorithm of Kass (1980)
+An implementation in base 'R' of the CHAID (Chi-squared Automatic
+Interaction Detection) decision tree algorithm of Kass (1980)
 [doi:10.2307/2986296](https://doi.org/10.2307/2986296) and the
 Exhaustive CHAID variant of Biggs, de Ville, and Suen (1991)
 [doi:10.1080/02664769100000005](https://doi.org/10.1080/02664769100000005)

@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   chaidr-ja: chaidr-ja.html
   chaidr: chaidr.html
-last_built: 2026-08-09T02:19Z
+last_built: 2026-08-09T02:21Z
 urls:
   reference: https://morimotoosamu.github.io/chaidr/reference
   article: https://morimotoosamu.github.io/chaidr/articles
